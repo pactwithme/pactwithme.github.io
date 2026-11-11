@@ -1,46 +1,61 @@
-# Pact 网站：上线步骤
+# Pact website
 
-纯静态网站（HTML/CSS/JS），不需要构建。早期报名的邮箱会写进团队共享的 Google Sheet。
+Landing page for **Pact**: pick one spending habit to break, do it with friends, and whoever misses a day takes the dare the crew picks.
+
+**Live site:** https://yuge-225.github.io/pact-site/
+
+It's a plain static site (HTML, CSS and JavaScript). There's no build step: every push to `main` goes live on GitHub Pages within a minute or two.
+
+## What's in the repo
 
 ```
-index.html            首页（已重新设计）
-prototype.html        "Try it" 演示页（里面嵌入 prototype/app/）
-survey.html           "Get early access" 报名页
-assets/style.css      三个页面共用的样式
-assets/config.js      ← 在这里填 Google Apps Script 的网址
-assets/signup.js      报名表单逻辑
-google-apps-script/Code.gs   粘贴到 Google Sheet 的 Apps Script 里
+index.html                  Home page: receipt hero, scroll-driven group chat, dare wall,
+                            drag-to-compare privacy view, savings goals, sign-up
+prototype.html              "Try it" page; embeds the clickable demo in prototype/app/
+survey.html                 "Get early access" sign-up page
+assets/style.css            Shared styles and color/type tokens for all pages
+assets/site.js              Nav shadow on scroll, footer year
+assets/home.js              Home page motion (chat playback, word reveal, compare handle, goal bars)
+assets/config.js            URL of the Google Apps Script that stores sign-ups
+assets/signup.js            Early-access form logic used on every page
+prototype/app/              Compiled demo app (React bundle; edit the original source, not this)
+google-apps-script/Code.gs  Sign-up endpoint that writes to the Google Sheet
 ```
 
-## 1. 连接 Google Sheet（约 5 分钟）
+## Early-access sign-ups
 
-1. 新建一个 Google Sheet，比如命名为 "Pact sign-ups"，然后共享给队友。
-2. 在表格菜单中打开 **扩展程序 → Apps Script**。
-3. 删掉编辑器里原有的内容，把 `google-apps-script/Code.gs` 的全部内容粘贴进去，然后保存。
-4. 点击 **部署 → 新建部署**，类型选 **Web 应用**：
-   - 执行身份：**我**
-   - 谁可以访问：**任何人**
-5. 点击部署，按提示授权，然后复制以 `/exec` 结尾的网址。
-6. 打开 `assets/config.js`，把网址填进去：
-   ```js
-   window.PACT_SIGNUP_URL = 'https://script.google.com/macros/s/XXXX/exec';
-   ```
-7. 用浏览器打开这个 `/exec` 网址。如果看到 `{"ok":true,"service":"pact-signup"}`，说明部署成功。
+Every sign-up form posts to a Google Apps Script web app, which adds one row to the **Signups** tab of the team's Google Sheet ("Pact sign-ups"):
 
-第一次有人报名时，表格里会自动生成 **Signups** 标签页，列为：Time | Email | Source | Page。同一个邮箱不会重复记录。
+| Time | Email | Source | Page |
+|---|---|---|---|
 
-> 以后修改了 Code.gs，要在 **部署 → 管理部署** 里编辑现有部署并选择"新版本"，这样网址不会变。如果选"新建部署"，会生成一个新网址。
+- The same email is only stored once.
+- A hidden honeypot field filters out simple bots.
+- Add `?src=<channel>` to any link you share (for example `?src=instagram`) and it shows up in the **Source** column.
 
-## 2. 发布网站（任选一种）
+The endpoint URL lives in `assets/config.js`. If it's left empty, the forms show "Sign-ups aren't switched on yet" instead of failing silently.
 
-**Netlify Drop（最快）**：登录 https://app.netlify.com/drop ，把整个 `pact` 文件夹拖进去，就会得到一个 `*.netlify.app` 链接。之后可以在站点设置里修改子域名。
+### Changing the sign-up script
 
-**GitHub Pages**：新建一个仓库，上传文件夹里的全部文件，然后在 Settings → Pages 中选择 `main` 分支的根目录。
+1. Open the sheet, then **Extensions → Apps Script**.
+2. Edit the code (keep `google-apps-script/Code.gs` in this repo in sync).
+3. **Deploy → Manage deployments → ✏️ Edit → Version: New version → Deploy.**
+   Editing the existing deployment keeps the same URL. Choosing **New deployment** creates a new URL, which then has to go into `assets/config.js`.
 
-**Replit**：Remix 原项目，或者新建一个 Static 项目，用这些文件替换原有文件，再点 Deploy。
+### Setting it up from scratch
 
-## 3. 上线后测试
+1. Create a Google Sheet, then **Extensions → Apps Script**, and paste in `google-apps-script/Code.gs`.
+2. **Deploy → New deployment → Web app**, with *Execute as: Me* and *Who has access: Anyone*.
+3. Approve the permissions prompt. Google shows "unverified app" for your own scripts; choose **Advanced → Go to … (unsafe)**.
+4. Copy the URL ending in `/exec` into `assets/config.js`.
+5. Opening that URL in a browser should show `{"ok":true,"service":"pact-signup"}`.
 
-在首页提交一个测试邮箱，检查它是否出现在 Sheet 里，然后把这一行删掉。
+## Making changes
 
-可以在链接后面加 `?src=xxx` 来追踪报名来源，比如 `?src=instagram`，这个值会写进 Source 列。
+- **Preview locally:** run `python3 -m http.server 8000` in this folder and open http://localhost:8000.
+- **Cache busting:** browsers cache CSS and JS for about 10 minutes. When you change a file in `assets/`, bump the `?v=` number where it's linked in the HTML pages so visitors get the new version straight away.
+- **Motion:** visitors who turn on "reduce motion" in their system settings get a static version. The chat shows in full and nothing animates.
+
+## Custom domain
+
+The site is served by GitHub Pages from the `main` branch. To use your own domain, add a `CNAME` file containing the domain, point DNS at GitHub Pages, then turn on **Enforce HTTPS** under **Settings → Pages**.
