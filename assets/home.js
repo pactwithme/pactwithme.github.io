@@ -26,7 +26,8 @@
   }
   if(manifesto && !reduce) split(manifesto);
 
-  /* 2. The group chat: scroll position decides how many messages have arrived */
+  /* 2. The group chat. Scrolling sets how far the conversation should be; a small
+        player then delivers messages one at a time, so a fast flick never skips any. */
   var story = document.querySelector('.story');
   var msgs = story ? Array.prototype.slice.call(story.querySelectorAll('.m')) : [];
   var chapters = story ? story.querySelectorAll('.ch') : [];
@@ -36,8 +37,11 @@
   var streak = story && story.querySelector('.streak');
   var streakText = {1:'Starts Mon', 2:'Day 1 of 7', 3:'Day 2 of 7', 4:'Week done ✓'};
   var NAMES = {a1:'A', a2:'R', a3:'K', a4:'Y'};
-  var shown = -1, chapter = 0;
-  if(story && scrolly) story.style.setProperty('--n', Math.round(msgs.length * 0.8));
+  var START = 2;                    // the timestamp and Alex's first message are there from the start
+  var PACE = 420, TYPE = 600, RUSH = 170, REWIND = 45;   // ms
+  var shown = 0, target = START, chapter = 0, timer = null, typingFor = null;
+  // about 18% of a screen of scrolling per message
+  if(story && scrolly) story.style.setProperty('--n', Math.round(msgs.length * 1.2));
 
   function setChapter(c){
     if(c === chapter) return; chapter = c;
@@ -45,26 +49,40 @@
     dots.forEach(function(el){ el.classList.toggle('on', +el.dataset.ch <= c); });
     if(streak) streak.textContent = streakText[c];
   }
+  function setTyping(who){
+    typingFor = who;
+    if(!typing) return;
+    typing.classList.toggle('on', !!who);
+    if(who){ typingAv.className = 'av ' + who; typingAv.textContent = NAMES[who]; }
+  }
+  function render(){
+    for(var i = 0; i < msgs.length; i++) msgs[i].classList.toggle('show', i < shown);
+    if(shown) setChapter(+msgs[shown - 1].dataset.ch);
+  }
+  function step(){
+    timer = null;
+    if(shown < target){
+      var backlog = target - shown, who = msgs[shown].dataset.who;
+      // a friend's message gets a moment of "typing…" first, unless we're catching up
+      if(who && backlog <= 2 && typingFor !== who){ setTyping(who); timer = setTimeout(step, TYPE); return; }
+      setTyping(null); shown++; render();
+      timer = setTimeout(step, backlog > 3 ? RUSH : PACE);
+    } else if(shown > target){
+      setTyping(null); shown--; render();
+      timer = setTimeout(step, REWIND);
+    } else {
+      setTyping(null);
+    }
+  }
   function updateChat(vh){
     var r = story.getBoundingClientRect();
     var span = Math.max(1, r.height - vh);
     var p = clamp(-r.top / span, 0, 1);
-    var exact = 1 + p * (msgs.length - 1) * 1.04;      // first message is there from the start
-    var count = clamp(Math.floor(exact), 1, msgs.length);
-    if(count !== shown){
-      shown = count;
-      msgs.forEach(function(m, i){ m.classList.toggle('show', i < count); });
-      setChapter(+msgs[count - 1].dataset.ch);
-    }
-    // someone is typing when the next message is theirs and it's about to land
-    var next = msgs[count];
-    var who = next && next.dataset.who;
-    var on = !!who && (exact - Math.floor(exact)) > 0.35 && count < msgs.length;
-    if(typing){
-      typing.classList.toggle('on', on);
-      if(on){ typingAv.className = 'av ' + who; typingAv.textContent = NAMES[who]; }
-    }
+    // reach the last message a little before the card unpins
+    var t = clamp(START + Math.floor(p * 1.08 * (msgs.length - START + 1)), START, msgs.length);
+    if(t !== target){ target = t; if(!timer) step(); }
   }
+  if(story && scrolly){ shown = START; render(); }
   if(!scrolly && chapters.length) chapters[0].classList.add('on');
 
   /* 3. Hero receipt drifts slower than the page */
