@@ -3,7 +3,9 @@
 (function(){
   var root = document.documentElement;
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var scrolly = root.classList.contains('scrolly');
+  // Only this script turns on scroll mode, so a stale or failed script never hides the chat.
+  var scrolly = !reduce;
+  if(scrolly) root.classList.add('scrolly');
   function clamp(v,a,b){ return Math.max(a, Math.min(b, v)); }
 
   /* 1. Manifesto: words light up as the paragraph scrolls through */
@@ -91,7 +93,58 @@
   window.addEventListener('resize', onScroll);
   onScroll();
 
-  /* 4. Sections ease in once */
+  /* 4. Privacy compare: drag (or arrow keys) between your view and your crew's view */
+  var cmp = document.getElementById('cmp'), range = document.getElementById('cmp-range'), touched = false;
+  function setX(v){ cmp.style.setProperty('--x', v + '%'); }
+  if(cmp && range){
+    // on phones the details column is narrower, so rest further right
+    var rest = window.matchMedia('(max-width: 640px)').matches ? 72 : 50;
+    setX(rest); range.value = rest;
+    range.addEventListener('input', function(){ touched = true; setX(range.value); });
+    range.addEventListener('pointerdown', function(){ touched = true; });
+    if(!reduce && 'IntersectionObserver' in window){
+      var co = new IntersectionObserver(function(entries){
+        if(!entries[0].isIntersecting) return;
+        co.disconnect();
+        // one gentle sweep so people notice it moves, then back to rest
+        var keys = [rest, rest - 26, Math.min(rest + 18, 92), rest], t0 = null, dur = 2600;
+        function ease(t){ return t < .5 ? 2*t*t : 1 - Math.pow(-2*t + 2, 2) / 2; }
+        function frame(ts){
+          if(touched) return;
+          if(t0 === null) t0 = ts;
+          var t = clamp((ts - t0) / dur, 0, 1), seg = Math.min(2, Math.floor(t * 3)), lt = ease(t * 3 - seg);
+          var v = keys[seg] + (keys[seg + 1] - keys[seg]) * lt;
+          setX(v.toFixed(1)); range.value = v;
+          if(t < 1) requestAnimationFrame(frame);
+        }
+        setTimeout(function(){ requestAnimationFrame(frame); }, 500);
+      }, {threshold: 0.6});
+      co.observe(cmp);
+    }
+  }
+
+  /* 5. Savings goals: bars fill and numbers count up when they scroll in */
+  var goals = document.getElementById('goals');
+  if(goals && 'IntersectionObserver' in window){
+    var go = new IntersectionObserver(function(entries){
+      if(!entries[0].isIntersecting) return;
+      go.disconnect(); goals.classList.add('in');
+      if(reduce) return;
+      goals.querySelectorAll('[data-to]').forEach(function(el){
+        var to = +el.dataset.to, rest = el.querySelector('span'), t0 = null;
+        function tick(ts){
+          if(t0 === null) t0 = ts;
+          var t = clamp((ts - t0) / 1400, 0, 1), v = Math.round(to * (1 - Math.pow(1 - t, 3)));
+          el.firstChild.nodeValue = '$' + v.toLocaleString('en-US') + ' ';
+          if(t < 1) requestAnimationFrame(tick);
+        }
+        if(rest) requestAnimationFrame(tick);
+      });
+    }, {threshold: 0.4});
+    go.observe(goals);
+  } else if(goals){ goals.classList.add('in'); }
+
+  /* 6. Sections ease in once */
   var rv = document.querySelectorAll('.rv');
   if('IntersectionObserver' in window){
     var ro = new IntersectionObserver(function(entries){

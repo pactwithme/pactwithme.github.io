@@ -8,8 +8,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Caveat:wght@500;700&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/style.css">
-<script>document.documentElement.classList.add('js');if(!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('scrolly')</script>
+<link rel="stylesheet" href="assets/style.css?v=4">
+<script>document.documentElement.classList.add('js')</script>
 <style>
 :root{--a1:#2D6A4F;--a2:#B07D3A;--a3:#C2554B;--a4:#3E5C8A;--ease:cubic-bezier(.2,.7,.2,1)}
 
@@ -231,22 +231,73 @@ html:not(.scrolly) .thread{justify-content:flex-start;overflow-y:auto}
 }
 @media (prefers-reduced-motion:reduce){.lane{flex-wrap:wrap;width:auto}.lane [aria-hidden]{display:none}}
 
-/* ---------- privacy split ---------- */
-.privacy{padding-top:40px}
-.privacy h2{max-width:18ch}
-.split{display:grid;grid-template-columns:1fr 1fr;margin-top:44px;border:1.5px solid var(--ink);border-radius:var(--radius);background:var(--paper);overflow:hidden}
-.split > div{padding:28px 30px}
-.split > div + div{border-left:1.5px solid var(--ink);background:repeating-linear-gradient(135deg,transparent 0 10px,color-mix(in srgb, var(--line) 35%, transparent) 10px 11px),var(--paper)}
-.split h3{font-family:var(--mono);font-size:.78rem;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:16px}
-.split ul{list-style:none;margin:0;padding:0;display:grid;gap:12px}
-.split li{display:grid;grid-template-columns:1.4em 1fr;gap:8px;font-size:1.02rem}
-.split li::before{font-family:var(--mono);font-weight:600}
-.shared li::before{content:"✓";color:var(--green-3)}
-.private li::before{content:"—";color:var(--muted)}
-@media (max-width:720px){.split{grid-template-columns:1fr}.split > div + div{border-left:0;border-top:1.5px solid var(--ink)}}
-.goals{display:flex;flex-wrap:wrap;gap:10px 28px;margin-top:40px;align-items:baseline}
-.goals .eyebrow{color:var(--muted)}
-.goals span:not(.eyebrow){font-family:var(--display);font-size:1.35rem;font-weight:500;letter-spacing:-.01em}
+/* ---------- privacy: drag between your view and your crew's view ---------- */
+.privacy{padding:110px 0 120px}
+.privacy .top{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:end;gap:20px 48px}
+.privacy h2{max-width:16ch;margin-top:14px}
+.privacy .top p{max-width:34ch;color:var(--muted);font-size:1.08rem}
+
+.cmp{--x:50%;position:relative;margin-top:44px;border-radius:24px;overflow:hidden;border:1px solid var(--line);background:var(--paper);box-shadow:0 40px 80px -48px rgba(21,33,28,.35);user-select:none;-webkit-user-select:none;touch-action:pan-y}
+.view{padding:26px 30px 28px;display:grid;gap:18px}
+.view.crew{position:absolute;inset:0;background:var(--ink);color:#E8EEEA;clip-path:inset(0 0 0 var(--x))}
+.vh{display:flex;align-items:center;gap:10px}
+.vh .av{width:30px;height:30px;font-size:.7rem}
+.vh b{font-size:1rem}
+.vh small{display:block;font-size:.78rem;color:var(--muted)}
+.view.crew .vh small{color:#9FB2A7}
+.chip{margin-inline:6px;font-family:var(--mono);font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;padding:4px 9px;border-radius:99px;background:var(--mint);color:var(--green)}
+.view.crew .chip{background:rgba(255,255,255,.1);color:#CFE1D6}
+.days{list-style:none;margin:0;padding:0;display:grid}
+.days li{display:grid;grid-template-columns:3.2em auto auto minmax(0,1fr);gap:14px;align-items:center;padding:11px 0;border-top:1px solid var(--line);font-size:1rem}
+.view.crew .days li{border-color:rgba(255,255,255,.1);grid-template-columns:auto minmax(0,1fr) auto 3.2em}
+.view.crew .days .d{text-align:right}
+.view.crew .vh{flex-direction:row-reverse;text-align:right}
+.view.crew .sumrow{grid-template-columns:auto minmax(0,1fr);text-align:right}
+.view.crew .flames{flex-direction:row-reverse}
+.days .d{font-family:var(--mono);font-size:.78rem;color:var(--muted)}
+.view.crew .days .d{color:#9FB2A7}
+.days .amt{padding:2px 8px;border-radius:6px;background:var(--mint);font-family:var(--mono);font-size:.9rem;font-variant-numeric:tabular-nums;color:var(--green-2);font-weight:600}
+.days .k{color:var(--green-3);font-weight:600}
+.view.crew .days .k{color:#7FD1A3}
+.redact{display:inline-block;width:5.2em;height:.95em;border-radius:3px;background:repeating-linear-gradient(135deg,rgba(255,255,255,.22) 0 4px,rgba(255,255,255,.1) 4px 8px);vertical-align:middle}
+.redact.wide{width:9em}
+.sumrow{display:grid;grid-template-columns:auto minmax(0,1fr);gap:6px 14px;align-items:center}
+.sumrow b{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.sumrow .bar{grid-column:1/-1;height:10px;border-radius:99px;background:color-mix(in srgb, var(--line) 70%, transparent);overflow:hidden}
+.sumrow .bar i{display:block;height:100%;width:62%;background:var(--green);border-radius:99px}
+.view.crew .sumrow .bar{background:rgba(255,255,255,.1)}
+.flames{display:flex;gap:6px}
+.flames i{flex:1;height:10px;border-radius:3px;background:rgba(255,255,255,.12)}
+.flames i.on{background:#7FD1A3}
+
+.handle{position:absolute;top:0;bottom:0;left:var(--x);width:0;pointer-events:none;z-index:2}
+.handle::before{content:"";position:absolute;top:0;bottom:0;left:-1px;width:2px;background:var(--gold)}
+.knob{position:absolute;top:50%;left:0;transform:translate(-50%,-50%);width:46px;height:46px;border-radius:50%;background:var(--gold);color:#2B2306;display:grid;place-items:center;font-weight:700;font-size:1rem;box-shadow:0 6px 18px rgba(21,33,28,.3)}
+.cmp input[type=range]{position:absolute;inset:0;width:100%;height:100%;margin:0;opacity:0;cursor:ew-resize;z-index:3}
+.cmp:has(input:focus-visible) .knob{outline:3px solid var(--green-3);outline-offset:3px}
+.hint{margin-top:14px;font-size:.88rem;color:var(--muted);text-align:center}
+@media (max-width:640px){.view{padding:20px 16px 22px}.days li{gap:8px;font-size:.86rem;grid-template-columns:2.4em minmax(0,7.2em) auto}.days li > span:nth-child(2){white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.days .amt{font-size:.78rem;padding:1px 5px}.view.crew .days li{grid-template-columns:auto minmax(0,1fr) auto}.view.crew .days .d{display:none}.vh small{display:none}.vh b{font-size:.9rem}.chip{display:none}.redact.wide{width:4em}.view.crew .vh b,.view.crew .sumrow > span:nth-child(2){display:none}.view.crew .sumrow{min-height:1.4em}}
+@media (max-width:440px){.goal-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.gcard{padding:14px;gap:10px}.gcard b{font-size:1.02rem}.gcard .num{font-size:.78rem}.gcard .gt{flex-direction:column;gap:2px}}
+
+/* savings goals: bars fill when they scroll in */
+.goals-h{display:flex;justify-content:space-between;align-items:baseline;gap:16px;margin-top:80px}
+.goals-h .eyebrow{color:var(--muted)}
+.goals-h small{font-size:.85rem;color:var(--muted)}
+.goal-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;margin-top:18px}
+.gcard{background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:20px;display:grid;gap:14px}
+.gcard .gt{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.gcard b{font-family:var(--display);font-size:1.25rem;letter-spacing:-.02em}
+.gcard .pct{font-family:var(--mono);font-size:.78rem;color:var(--muted)}
+.gcard .num{font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:.92rem}
+.gcard .num span{color:var(--muted)}
+.gbar{height:12px;border-radius:99px;background:color-mix(in srgb, var(--line) 70%, transparent);overflow:hidden}
+.gbar i{display:block;height:100%;width:var(--p);border-radius:99px;background:var(--green);transition:width 1.4s var(--ease)}
+.gcard.done .gbar i{background:var(--gold)}
+.gcard.done .pct{color:#7A5A12;font-weight:600}
+.js .goal-grid:not(.in) .gbar i{width:0}
+.goal-grid .gcard:nth-child(2) .gbar i{transition-delay:.12s}.goal-grid .gcard:nth-child(3) .gbar i{transition-delay:.24s}.goal-grid .gcard:nth-child(4) .gbar i{transition-delay:.36s}
+@media (max-width:980px){.goal-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
 
 /* ---------- sign-up band ---------- */
 .join{background:var(--green);color:#E6EFE9;padding:88px 0}
@@ -466,30 +517,45 @@ html:not(.scrolly) .thread{justify-content:flex-start;overflow-y:auto}
 </section>
 
 <section class="privacy" id="why"><div class="wrap">
-  <div class="rv">
-    <p class="eyebrow">Your money stays private</p>
-    <h2 style="margin-top:14px">Friends see the streak, not the spending.</h2>
-  </div>
-  <div class="split rv">
-    <div class="shared">
-      <h3>Shared with your crew</h3>
-      <ul>
-        <li>Whether you kept it today</li>
-        <li>Your streak and the crew's progress bar</li>
-        <li>Your spot on the leaderboard</li>
-        <li>Nudges, cheers and dares</li>
-      </ul>
+  <div class="top rv">
+    <div>
+      <p class="eyebrow">Your money stays private</p>
+      <h2>Friends see the streak, not the spending.</h2>
     </div>
-    <div class="private">
-      <h3>Only on your phone</h3>
-      <ul>
-        <li>What you spend, and where</li>
-        <li>How much you've saved</li>
-        <li>Your goal amount</li>
-      </ul>
-    </div>
+    <p>Same week, two views. Drag the handle to see what your crew sees.</p>
   </div>
-  <div class="goals rv"><span class="eyebrow">Save toward</span><span>a trip</span><span>a new laptop</span><span>concert tickets</span><span>a rainy-day fund</span></div>
+
+  <div class="cmp rv" id="cmp">
+    <div class="view you">
+      <div class="vh"><i class="av a4">Y</i><div><b>Your week</b><small>Only on your phone</small></div><span class="chip">You see</span></div>
+      <ul class="days">
+        <li><span class="d">MON</span><span>Skipped the burrito run</span><span class="amt">+$14.80</span></li>
+        <li><span class="d">TUE</span><span>Pasta night with Ravi</span><span class="amt">+$12.00</span></li>
+        <li><span class="d">WED</span><span>Packed lunch</span><span class="amt">+$16.50</span></li>
+      </ul>
+      <div class="sumrow"><span>Japan trip</span><b>$620 / $1,000</b><span class="bar"><i></i></span></div>
+    </div>
+    <div class="view crew" aria-hidden="true">
+      <div class="vh"><i class="av a3">K</i><div><b>You, as Kim sees it</b><small>Shared with your crew</small></div><span class="chip">Crew sees</span></div>
+      <ul class="days">
+        <li><span class="redact"></span><span></span><span class="k">✓ Kept it</span><span class="d">MON</span></li>
+        <li><span class="redact"></span><span></span><span class="k">✓ Kept it</span><span class="d">TUE</span></li>
+        <li><span class="redact"></span><span></span><span class="k">✓ Kept it</span><span class="d">WED</span></li>
+      </ul>
+      <div class="sumrow"><span class="redact wide"></span><span>🔥 3-day streak</span><span class="flames bar-free" style="grid-column:1/-1"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i><i></i><i></i></span></div>
+    </div>
+    <div class="handle" aria-hidden="true"><span class="knob">⇆</span></div>
+    <input type="range" id="cmp-range" min="0" max="100" value="50" aria-label="Compare your view with your crew's view">
+  </div>
+  <p class="hint">Amounts, merchants and goals never leave your phone.</p>
+
+  <div class="goals-h rv"><span class="eyebrow">Save toward something real</span><small>Example goals · only you see these</small></div>
+  <div class="goal-grid" id="goals">
+    <div class="gcard" style="--p:62%"><div class="gt"><b>Japan trip</b><span class="pct">62%</span></div><div class="num" data-to="620">$620 <span>/ $1,000</span></div><div class="gbar"><i></i></div></div>
+    <div class="gcard" style="--p:28%"><div class="gt"><b>New laptop</b><span class="pct">28%</span></div><div class="num" data-to="340">$340 <span>/ $1,200</span></div><div class="gbar"><i></i></div></div>
+    <div class="gcard done" style="--p:100%"><div class="gt"><b>Concert tickets</b><span class="pct">Reached 🎉</span></div><div class="num" data-to="180">$180 <span>/ $180</span></div><div class="gbar"><i></i></div></div>
+    <div class="gcard" style="--p:19%"><div class="gt"><b>Rainy-day fund</b><span class="pct">19%</span></div><div class="num" data-to="95">$95 <span>/ $500</span></div><div class="gbar"><i></i></div></div>
+  </div>
 </div></section>
 
 <div class="join"><div class="wrap">
@@ -515,9 +581,9 @@ html:not(.scrolly) .thread{justify-content:flex-start;overflow-y:auto}
   <span style="display:flex;gap:18px"><a href="index.html">Home</a><a href="prototype.html">Try it</a><a href="survey.html">Early access</a></span>
 </div></footer>
 
-<script src="assets/site.js"></script>
-<script src="assets/home.js"></script>
-<script src="assets/config.js"></script>
-<script src="assets/signup.js"></script>
+<script src="assets/site.js?v=4"></script>
+<script src="assets/home.js?v=4"></script>
+<script src="assets/config.js?v=4"></script>
+<script src="assets/signup.js?v=4"></script>
 </body>
 </html>
