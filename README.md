@@ -2,7 +2,7 @@
 
 Landing page for **Pact**: pick one spending habit to break, do it with friends, and whoever misses a day takes the dare the crew picks.
 
-**Live site:** https://yuge-225.github.io/pact-site/
+**Live site:** https://pactwithme.github.io/
 
 It's a plain static site (HTML, CSS and JavaScript). There's no build step: every push to `main` goes live on GitHub Pages within a minute or two.
 
