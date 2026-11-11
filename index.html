@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Caveat:wght@500;700&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/style.css">
-<script>document.documentElement.classList.add('js')</script>
+<script>document.documentElement.classList.add('js');if(!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('scrolly')</script>
 <style>
 :root{--a1:#2D6A4F;--a2:#B07D3A;--a3:#C2554B;--a4:#3E5C8A;--ease:cubic-bezier(.2,.7,.2,1)}
 
@@ -45,6 +45,8 @@
 .slip-top{display:flex;justify-content:space-between;gap:12px;color:var(--muted);font-size:.7rem;letter-spacing:.06em;text-transform:uppercase}
 .slip h2{font-family:var(--display);font-size:1.9rem;letter-spacing:-.03em;margin:10px 0 4px;color:var(--ink)}
 .slip .dates{color:var(--muted)}
+.stake{display:inline-block;margin-top:9px;padding:3px 8px;border-radius:4px;background:var(--gold-2);color:#5A4410;font-size:.72rem}
+.hero .lede strong{color:var(--ink);font-weight:600}
 .rule{border:0;border-top:1.5px dashed var(--line);margin:15px 0}
 .sec{display:flex;justify-content:space-between;gap:8px;font-size:.68rem;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);margin-bottom:9px}
 .ledger{list-style:none;margin:0;padding:0;display:grid;gap:7px}
@@ -71,6 +73,7 @@
 .crew{display:grid;gap:7px}
 .crew-row{display:grid;grid-template-columns:4.4em repeat(7,minmax(0,1fr)) 2.4em;gap:4px;align-items:center}
 .crew-row .sig{font-family:var(--hand);font-size:1.3rem;overflow:hidden;line-height:1;color:var(--green);transform:rotate(-3deg);white-space:nowrap}
+.crew-row.lose .n{color:var(--coral);font-weight:600}
 .crew-row .n{text-align:right;color:var(--muted);font-variant-numeric:tabular-nums}
 .cell{height:14px;border-radius:3px;background:color-mix(in srgb, var(--line) 60%, transparent)}
 .cell.k{background:var(--green)}
@@ -101,72 +104,132 @@
 .manifesto .w{transition:opacity .2s linear;opacity:var(--o,1)}
 .manifesto em{font-style:normal;color:var(--green-2)}
 
-/* ---------- story: sticky app card, text scrolls past ---------- */
-.story{padding:40px 0 120px}
-.story-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:72px}
-.steps{display:grid}
-.st{min-height:78vh;display:grid;align-content:center;gap:14px;max-width:30rem}
-.st:first-child{min-height:60vh;align-content:start;padding-top:12vh}
-.st:last-child{min-height:70vh}
-.st .eyebrow{color:var(--muted)}
-.st h3{font-size:clamp(2rem,3.6vw,3rem);letter-spacing:-.03em}
-.st p{font-size:1.12rem;color:var(--muted)}
-.js .st{opacity:.28;transition:opacity .5s var(--ease)}
-.js .st.on{opacity:1}
-.visual{position:sticky;top:max(80px, calc(50vh - 320px));align-self:start}
+/* ---------- story: a group chat that plays as you scroll ---------- */
+.story{position:relative;margin-top:40px}
+.scrolly .story{height:calc(var(--n,20) * 15vh + 100vh)}
+.pin{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,400px);gap:72px;align-items:center;padding-block:40px}
+.scrolly .pin{position:sticky;top:64px;height:calc(100vh - 64px);height:calc(100svh - 64px);padding-block:24px}
 
-.feed{background:var(--paper);border:1px solid var(--line);border-radius:22px;padding:18px;box-shadow:0 30px 60px -30px rgba(21,33,28,.28);display:grid;gap:6px}
-.feed-head{display:flex;justify-content:space-between;align-items:center;gap:12px;padding-bottom:12px;border-bottom:1px solid var(--line)}
-.feed-head b{display:block;font-family:var(--display);font-size:1.35rem;letter-spacing:-.02em}
-.feed-head .day{font-family:var(--mono);font-size:.7rem;letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
-.feed-head .stack .av{border-color:var(--paper)}
-.layer{display:grid;gap:8px;padding:10px 12px;border-radius:14px;transition:opacity .6s var(--ease), background .6s var(--ease), transform .6s var(--ease)}
-.js .layer{opacity:.2;transform:scale(.985)}
-.js .layer.past{opacity:.5;transform:none}
-.js .layer.on{opacity:1;transform:none;background:color-mix(in srgb, var(--mint) 38%, transparent)}
-.lbl{display:flex;justify-content:space-between;font-family:var(--mono);font-size:.7rem;letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
-.lbl span{color:var(--green-2)}
-.terms{font-size:.92rem}
-@media (max-height:820px){.terms{display:none}.feed-head{padding-bottom:8px}}
-.sigs{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
-.sigs span{font-family:var(--hand);font-size:1.4rem;line-height:1.1;color:var(--green);border-bottom:1px solid var(--ink);clip-path:inset(0 0 0 0);transition:clip-path .8s var(--ease)}
-.js .feed:not(.s1) .sigs span{clip-path:inset(0 100% 0 0)}
-.sigs span:nth-child(2){transition-delay:.15s}.sigs span:nth-child(3){transition-delay:.3s}.sigs span:nth-child(4){transition-delay:.45s}
-.checks{list-style:none;margin:0;padding:0;display:grid;gap:6px}
-.checks li{display:flex;align-items:center;gap:10px;font-size:.92rem;transition:opacity .4s var(--ease), transform .4s var(--ease)}
-.checks li span{margin-left:auto;font-family:var(--mono);font-size:.75rem;color:var(--muted)}
-.checks li b{width:1.2em;text-align:center;color:var(--green-3)}
-.checks li.wait b{color:var(--muted)}
-.js .feed:not(.s2) .checks li{opacity:.4;transform:translateY(6px)}
-.checks li:nth-child(2){transition-delay:.1s}.checks li:nth-child(3){transition-delay:.2s}.checks li:nth-child(4){transition-delay:.3s}
-.chat{display:grid;gap:6px}
-.bub{justify-self:start;max-width:85%;display:flex;gap:8px;align-items:flex-end;font-size:.88rem;transition:opacity .45s var(--ease), transform .45s var(--ease)}
-.bub p{background:color-mix(in srgb, var(--line) 45%, var(--paper));padding:6px 11px;border-radius:14px 14px 14px 4px}
-.bub.me{justify-self:end;flex-direction:row-reverse}
-.bub.me p{background:var(--green);color:#fff;border-radius:14px 14px 4px 14px}
-.bub.sys{justify-self:center;font-family:var(--mono);font-size:.72rem;color:var(--muted)}
-.bub.sys p{background:none;padding:0}
-.js .feed:not(.s3) .bub{opacity:.4;transform:translateY(8px)}
-.bub:nth-child(2){transition-delay:.2s}.bub:nth-child(3){transition-delay:.4s}
-.fbar{display:flex;height:14px;border-radius:99px;overflow:hidden;background:color-mix(in srgb, var(--line) 60%, transparent)}
-.fbar i{display:block;height:100%;transition:width 1.1s var(--ease)}
-.fbar .k{width:50%;background:var(--green)}
-.fbar .x{width:3.57%;background:var(--coral)}
-.feed.s4 .fbar .k{width:89.3%}
-.feed.s4 .fbar .x{width:10.71%}
-.recap{font-size:.92rem;color:var(--muted)}
-.swap .later{display:none}
-.feed.s4 .swap .now{display:none}
-.feed.s4 .swap .later{display:inline}
+.chapters{position:relative;min-height:15rem}
+.ch{display:grid;gap:16px;max-width:30rem}
+.ch .when{font-family:var(--mono);font-size:.8rem;letter-spacing:.08em;text-transform:uppercase;color:var(--green-2)}
+.ch h2{font-size:clamp(2.2rem,4.6vw,3.8rem)}
+.ch h2 em{font-style:normal;color:var(--coral)}
+.scrolly .ch{position:absolute;inset:0 0 auto 0;opacity:0;transform:translateY(16px);transition:opacity .5s var(--ease), transform .5s var(--ease)}
+.scrolly .ch.on{opacity:1;transform:none}
+.ch-dots{display:flex;gap:8px;margin-top:28px}
+.scrolly .ch-dots{position:absolute;left:0;bottom:-3rem;margin:0}
+.ch-dots i{width:28px;height:4px;border-radius:2px;background:var(--line);transition:background .4s}
+.ch-dots i.on{background:var(--green)}
+html:not(.scrolly) .chapters .ch + .ch, html:not(.scrolly) .ch-dots{display:none}
+
+/* the phone-sized chat window */
+.phone{display:flex;flex-direction:column;height:min(720px, 100%);min-height:0;background:var(--paper);border:1px solid var(--line);border-radius:30px;overflow:hidden;box-shadow:0 40px 80px -40px rgba(21,33,28,.35), 0 2px 6px rgba(21,33,28,.05)}
+html:not(.scrolly) .phone{height:680px}
+.chat-head{display:flex;align-items:center;gap:12px;padding:14px 16px;border-bottom:1px solid var(--line);background:color-mix(in srgb, var(--paper) 92%, var(--cream))}
+.chat-head .back{font-size:1.4rem;line-height:1;color:var(--green-2)}
+.gav{position:relative;width:40px;height:40px;flex:none}
+.gav .av{position:absolute;width:24px;height:24px;font-size:.6rem;border:2px solid var(--paper)}
+.gav .av:nth-child(1){left:0;top:0}.gav .av:nth-child(2){right:0;top:0}.gav .av:nth-child(3){left:0;bottom:0}.gav .av:nth-child(4){right:0;bottom:0}
+.chat-head b{display:block;font-size:.98rem;white-space:nowrap}
+.chat-head small{display:block;font-size:.75rem;color:var(--muted)}
+.chat-head .streak{margin-left:auto;font-family:var(--mono);font-size:.72rem;color:var(--green-2);background:var(--mint);padding:4px 8px;border-radius:99px;white-space:nowrap}
+
+.thread{flex:1;min-height:0;display:flex;flex-direction:column;justify-content:flex-end;overflow:hidden;padding:4px 12px 12px;background:var(--paper)}
+html:not(.scrolly) .thread{justify-content:flex-start;overflow-y:auto}
+.m{display:grid;grid-template-rows:1fr;transition:grid-template-rows .4s var(--ease), opacity .35s var(--ease)}
+.m > .mi{min-height:0;overflow:hidden;padding-top:6px}
+.scrolly .m{grid-template-rows:0fr;opacity:0}
+.scrolly .m.show{grid-template-rows:1fr;opacity:1}
+.scrolly .m.show > .mi > *{animation:pop .4s var(--ease) both}
+@keyframes pop{from{transform:translateY(10px) scale(.96);opacity:.2}}
+
+.stamp-t{text-align:center;font-family:var(--mono);font-size:.66rem;letter-spacing:.06em;color:var(--muted);padding:10px 0 2px}
+.row{display:flex;align-items:flex-end;gap:7px}
+.row .av{width:26px;height:26px;font-size:.62rem}
+.row .sp{width:26px;flex:none}
+.row.me{justify-content:flex-end}
+.bw{display:grid;gap:2px;max-width:78%;justify-items:start}
+.row.me .bw{justify-items:end}
+.who{font-size:.68rem;color:var(--muted);padding-left:10px}
+.b{position:relative;padding:8px 12px;border-radius:18px;font-size:.9rem;line-height:1.35;background:#ECEFEB;color:var(--ink)}
+.row:not(.me) .b{border-bottom-left-radius:6px}
+.row.me .b{background:var(--green);color:#fff;border-bottom-right-radius:6px}
+.b.big{font-size:1.6rem;padding:4px 8px;background:none}
+.rx{position:absolute;right:-4px;bottom:-12px;background:var(--paper);border:1px solid var(--line);border-radius:99px;font-size:.68rem;padding:1px 6px;color:var(--ink);white-space:nowrap;box-shadow:0 2px 4px rgba(21,33,28,.06)}
+.row.me .rx{right:auto;left:-4px}
+.has-rx{padding-bottom:12px}
+.read{font-size:.66rem;color:var(--muted);padding-right:4px}
+
+.sys{display:flex;justify-content:center}
+.sys span{display:inline-flex;align-items:center;gap:6px;font-size:.74rem;padding:5px 11px;border-radius:99px;background:color-mix(in srgb, var(--mint) 70%, transparent);color:var(--green)}
+.sys.bad span{background:#FBE3E0;color:#9C2F27}
+
+/* cards inside the chat */
+.card-in{margin:6px 22px 4px;border:1px solid var(--line);border-radius:16px;padding:12px 14px;background:color-mix(in srgb, var(--cream) 45%, var(--paper));display:grid;gap:8px;font-size:.84rem}
+.card-in .k{font-family:var(--mono);font-size:.64rem;letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
+.card-in .t{font-family:var(--display);font-weight:700;font-size:1.15rem;letter-spacing:-.02em}
+.card-in .stakes{display:flex;gap:8px;align-items:flex-start;padding:8px 10px;border-radius:10px;background:var(--gold-2);color:#5A4410}
+.card-in .signed{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:.78rem}
+.card-in .stack .av{width:22px;height:22px;font-size:.55rem;border-color:var(--paper)}
+.pg{display:grid;grid-template-columns:3.2em repeat(7,1fr) 2.2em;gap:3px;align-items:center;font-size:.75rem}
+.pg .cell{height:12px}
+.pg b{font-weight:600}
+.pg span:last-child{text-align:right;font-family:var(--mono);color:var(--muted)}
+.pg.lose span:first-child{color:var(--coral);font-weight:600}
+.poll{display:grid;gap:6px}
+.opt{position:relative;display:flex;justify-content:space-between;gap:8px;padding:7px 10px;border-radius:10px;border:1px solid var(--line);overflow:hidden;background:var(--paper)}
+.opt::before{content:"";position:absolute;inset:0 auto 0 0;width:var(--v,0%);background:color-mix(in srgb, var(--mint) 80%, transparent);z-index:0}
+.opt > *{position:relative}
+.opt.win{border-color:var(--green-3);font-weight:600}
+.opt.win::before{background:color-mix(in srgb, var(--green-3) 28%, transparent)}
+.opt small{font-family:var(--mono);color:var(--muted)}
+
+.typing{display:flex;align-items:flex-end;gap:7px;padding:6px 0 0;height:0;opacity:0;overflow:hidden;transition:opacity .2s}
+.typing.on{height:auto;opacity:1}
+.typing .av{width:26px;height:26px;font-size:.62rem}
+.dots{display:inline-flex;gap:4px;padding:11px 12px;border-radius:18px;border-bottom-left-radius:6px;background:#ECEFEB}
+.dots i{width:6px;height:6px;border-radius:50%;background:#98A39D;animation:dot 1s infinite}
+.dots i:nth-child(2){animation-delay:.15s}.dots i:nth-child(3){animation-delay:.3s}
+@keyframes dot{0%,60%,100%{transform:none;opacity:.5}30%{transform:translateY(-3px);opacity:1}}
+
+.composer{display:flex;gap:8px;align-items:center;padding:10px 12px 14px;border-top:1px solid var(--line)}
+.composer .in{flex:1;padding:9px 14px;border-radius:99px;border:1px solid var(--line);color:#9AA59F;font-size:.88rem}
+.composer .ci{padding:9px 14px;border-radius:99px;background:var(--green);color:#fff;font-size:.82rem;font-weight:600;white-space:nowrap}
 
 @media (max-width:900px){
-  .story-grid{grid-template-columns:1fr;gap:24px}
-  .visual{position:static;order:-1}
-  .st,.st:first-child,.st:last-child{min-height:0;padding:24px 0}
-  .js .st{opacity:1}
-  .js .layer,.js .layer.past{opacity:1;transform:none}
-  .manifesto{padding:88px 0 24px}
+  .pin{grid-template-columns:1fr;gap:14px;align-content:start}
+  .scrolly .pin{padding-block:12px}
+  .chapters{min-height:5.2rem}
+  .ch{gap:4px}
+  .ch h2{font-size:1.55rem}
+  .chat-head small{display:none}
+  .chat-head b{font-size:.92rem}
+  .scrolly .ch-dots{display:none}
+  .phone{height:auto;flex:1}
+  .scrolly .phone{min-height:0}
+  .scrolly .pin{display:flex;flex-direction:column;align-items:stretch}
+  html:not(.scrolly) .phone{height:640px}
 }
+
+/* ---------- dare wall ---------- */
+.dares{padding:110px 0 40px;overflow:hidden}
+.dares .head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:end;gap:20px 40px}
+.dares h2{max-width:14ch}
+.dares .head p{max-width:34ch;color:var(--muted);font-size:1.08rem}
+.lane{display:flex;gap:16px;width:max-content;padding:14px 0}
+.lanes{margin-top:36px;display:grid;gap:6px;-webkit-mask:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);mask:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)}
+.dare{flex:none;width:250px;padding:16px 18px;border-radius:14px;background:var(--paper);border:1px solid var(--line);display:grid;gap:10px;transform:rotate(var(--r,0deg))}
+.dare:nth-child(3n+1){--r:-1.5deg}.dare:nth-child(3n+2){--r:1deg}.dare:nth-child(4n){background:var(--gold-2);border-color:transparent}
+.dare b{font-family:var(--display);font-size:1.2rem;letter-spacing:-.02em;line-height:1.15}
+.dare small{font-family:var(--mono);font-size:.68rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+@media (prefers-reduced-motion:no-preference){
+  .lane{animation:drift 60s linear infinite}
+  .lane.rev{animation-direction:reverse;animation-duration:70s}
+  .lanes:hover .lane{animation-play-state:paused}
+  @keyframes drift{to{transform:translateX(-50%)}}
+}
+@media (prefers-reduced-motion:reduce){.lane{flex-wrap:wrap;width:auto}.lane [aria-hidden]{display:none}}
 
 /* ---------- privacy split ---------- */
 .privacy{padding-top:40px}
@@ -233,7 +296,7 @@
   <div class="hero-copy">
     <p class="eyebrow kicker">Coming soon</p>
     <h1>Break a spending habit. <span class="mark">Build your savings.</span></h1>
-    <p class="lede">Pick one habit, like takeout or impulse shopping, and take it on with friends. Every day you stick to it, money goes toward something you actually want.</p>
+    <p class="lede">Pick one habit, like takeout or impulse shopping, and take it on with friends. Every day you stick to it, money goes toward something you want. <strong>Miss a day, and your crew picks your dare.</strong></p>
     <form class="email-form" data-signup novalidate>
       <label for="hero-email" class="sr-only">Email address</label>
       <input type="email" id="hero-email" placeholder="you@example.com" autocomplete="email" maxlength="254" required>
@@ -249,6 +312,7 @@
       <div class="slip-top"><span>Pact Nº 0142</span><span>Your copy</span></div>
       <h2>No Takeout Week</h2>
       <div class="dates">Mon Nov 10 – Sun Nov 16 · 4 signed</div>
+      <div class="stake">🎲 Miss a day → the crew picks your dare</div>
       <hr class="rule">
       <div class="sec"><span>Your week</span><span>Not spent</span></div>
       <ol class="ledger">
@@ -271,7 +335,7 @@
       <div class="crew">
         <div class="crew-row" style="--i:7"><span class="sig">Alex</span><i class="cell k"></i><i class="cell k"></i><i class="cell k"></i><i class="cell t done"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><span class="n">4/4</span></div>
         <div class="crew-row" style="--i:8"><span class="sig">Ravi</span><i class="cell k"></i><i class="cell k"></i><i class="cell k"></i><i class="cell t done"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><span class="n">4/4</span></div>
-        <div class="crew-row" style="--i:9"><span class="sig">kim</span><i class="cell k"></i><i class="cell x"></i><i class="cell k"></i><i class="cell t done"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><span class="n">3/4</span></div>
+        <div class="crew-row lose" style="--i:9"><span class="sig">kim</span><i class="cell k"></i><i class="cell x"></i><i class="cell k"></i><i class="cell t done"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><span class="n">3/4</span></div>
         <div class="crew-row" style="--i:10"><span class="sig">you</span><i class="cell k"></i><i class="cell k"></i><i class="cell k"></i><i class="cell t"></i><i class="cell"></i><i class="cell"></i><i class="cell"></i><span class="n">3/3</span></div>
       </div>
       <div class="team" style="--i:11">
@@ -285,73 +349,121 @@
 </div></header>
 
 <section class="manifesto" aria-label="Why friends"><div class="wrap">
-  <p data-words>Cutting back alone runs on willpower. <em>Pact runs on friends.</em> They see your streak, cheer the good days, and notice when you skip one.</p>
+  <p data-words>Cutting back alone runs on willpower. <em>Pact runs on friends.</em> They see your streak, cheer the good days, and pick your dare when you slip.</p>
 </div></section>
 
-<section class="story" id="how" aria-label="How a pact works"><div class="wrap story-grid">
-  <div class="steps">
-    <article class="st" data-step="1">
-      <p class="eyebrow">Sunday night</p>
-      <h3>Sign it together.</h3>
-      <p>Pick the habit, the week and the stakes. Everyone signs, so everyone's in.</p>
-    </article>
-    <article class="st" data-step="2">
-      <p class="eyebrow">Every day</p>
-      <h3>See who's kept it.</h3>
-      <p>One tap to check in. Your crew sees a ✓ next to your name, never what you spent or where.</p>
-    </article>
-    <article class="st" data-step="3">
-      <p class="eyebrow">When it gets hard</p>
-      <h3>Nudge, cheer, dare.</h3>
-      <p>A message from a friend at 9 pm works better than a budget alert. Cheer the good days and catch a slip before it turns into a habit.</p>
-    </article>
-    <article class="st" data-step="4">
-      <p class="eyebrow">Sunday again</p>
-      <h3>Finish as a crew.</h3>
-      <p>One progress bar for the whole group. See who went 7 for 7, who owes the dare, then start the next pact.</p>
-    </article>
+<section class="story" id="how" aria-label="How a pact plays out, as a group chat"><div class="wrap pin">
+  <div class="chapters" aria-live="polite">
+    <div class="ch" data-ch="1"><span class="when">Sunday, 9:12 pm</span><h2>It starts in the group chat.</h2></div>
+    <div class="ch" data-ch="2"><span class="when">Every day</span><h2>One tap keeps the streak alive.</h2></div>
+    <div class="ch" data-ch="3"><span class="when">Tuesday, 9:40 pm</span><h2>Someone always <em>slips.</em></h2></div>
+    <div class="ch" data-ch="4"><span class="when">Sunday</span><h2>Last place takes <em>the dare.</em></h2></div>
+    <div class="ch-dots" aria-hidden="true"><i data-ch="1"></i><i data-ch="2"></i><i data-ch="3"></i><i data-ch="4"></i></div>
   </div>
 
-  <div class="visual">
-    <div class="feed s1 s2 s3" id="feed" aria-label="Example group view for the pact No Takeout Week">
-      <div class="feed-head">
-        <div><span class="day swap"><span class="now">Day 4 of 7</span><span class="later">Week done</span></span><b>No Takeout Week</b></div>
-        <div class="stack"><i class="av a1">A</i><i class="av a2">R</i><i class="av a3">K</i><i class="av a4">Y</i></div>
-      </div>
-
-      <div class="layer" data-layer="1">
-        <div class="lbl">The pact<span>Signed Sun 9:14 pm</span></div>
-        <p class="terms">No takeout for 7 days. Last place picks up the dare.</p>
-        <div class="sigs"><span>Alex</span><span>Ravi K.</span><span>kim</span><span>you</span></div>
-      </div>
-
-      <div class="layer" data-layer="2">
-        <div class="lbl">Today<span>3 of 4 in</span></div>
-        <ul class="checks">
-          <li><i class="av a1">A</i>Alex<span>8:12 am</span><b>✓</b></li>
-          <li><i class="av a2">R</i>Ravi<span>12:40 pm</span><b>✓</b></li>
-          <li><i class="av a3">K</i>Kim<span>7:05 pm</span><b>✓</b></li>
-          <li class="wait"><i class="av a4">Y</i>You<span>by 11:59 pm</span><b>…</b></li>
-        </ul>
-      </div>
-
-      <div class="layer" data-layer="3">
-        <div class="lbl">Crew chat</div>
-        <div class="chat">
-          <div class="bub"><i class="av a2">R</i><p>Day 4 and I haven't touched the delivery app 🍝</p></div>
-          <div class="bub"><i class="av a3">K</i><p>Your turn. Don't make me pick your dare 👀</p></div>
-          <div class="bub me"><p>Cooking now, checking in by 10</p></div>
-        </div>
-      </div>
-
-      <div class="layer" data-layer="4">
-        <div class="lbl">Crew progress<span class="swap"><span class="now">14 of 28 days</span><span class="later">25 of 28 days</span></span></div>
-        <div class="fbar"><i class="k"></i><i class="x"></i></div>
-        <p class="recap swap"><span class="now">Three days left. Every check-in moves the whole bar.</span><span class="later">Alex and Ravi went 7 for 7. Kim picks the dare.</span></p>
-      </div>
+  <div class="phone">
+    <div class="chat-head">
+      <span class="back" aria-hidden="true">‹</span>
+      <span class="gav" aria-hidden="true"><i class="av a1">A</i><i class="av a2">R</i><i class="av a3">K</i><i class="av a4">Y</i></span>
+      <span><b>No Takeout Week 🥡</b><small>Alex, Ravi, Kim, You</small></span>
+      <span class="streak">Day 4 of 7</span>
     </div>
+
+    <div class="thread" id="thread">
+      <!-- chapter 1 -->
+      <div class="m" data-ch="1"><div class="mi"><div class="stamp-t">SUN 9:12 PM</div></div></div>
+      <div class="m" data-ch="1" data-who="a1"><div class="mi"><div class="row"><i class="av a1">A</i><div class="bw"><span class="who">Alex</span><p class="b">I spent $96 on takeout this week 😭</p></div></div></div></div>
+      <div class="m" data-ch="1" data-who="a1"><div class="mi"><div class="row"><span class="sp"></span><div class="bw"><p class="b">who's doing a no-takeout week with me</p></div></div></div></div>
+      <div class="m" data-ch="1" data-who="a2"><div class="mi"><div class="row"><i class="av a2">R</i><div class="bw"><span class="who">Ravi</span><p class="b">in. my delivery history is embarrassing 💀</p></div></div></div></div>
+      <div class="m" data-ch="1" data-who="a3"><div class="mi"><div class="row"><i class="av a3">K</i><div class="bw"><span class="who">Kim</span><p class="b">fine. but whoever misses a day does a dare</p></div></div></div></div>
+      <div class="m" data-ch="1"><div class="mi"><div class="row me"><div class="bw"><p class="b">deal 🤝</p></div></div></div></div>
+      <div class="m" data-ch="1"><div class="mi"><div class="card-in">
+        <span class="k">New pact</span>
+        <span class="t">No Takeout Week</span>
+        <span>Mon Nov 10 – Sun Nov 16 · 7 days</span>
+        <span class="stakes">🎲 <span>Miss a day and the crew picks your dare.</span></span>
+        <span class="signed"><span class="stack"><i class="av a1">A</i><i class="av a2">R</i><i class="av a3">K</i><i class="av a4">Y</i></span>Signed by all 4</span>
+      </div></div></div>
+
+      <!-- chapter 2 -->
+      <div class="m" data-ch="2"><div class="mi"><div class="stamp-t">MON 7:48 PM</div></div></div>
+      <div class="m" data-ch="2"><div class="mi"><div class="sys"><span>✓ Alex kept it today</span></div></div></div>
+      <div class="m" data-ch="2" data-who="a2"><div class="mi has-rx"><div class="row"><i class="av a2">R</i><div class="bw"><span class="who">Ravi</span><p class="b">cooked for the first time since September 🍳<span class="rx">🔥 3</span></p></div></div></div></div>
+      <div class="m" data-ch="2"><div class="mi"><div class="row me"><div class="bw"><p class="b">who is this man</p></div></div></div></div>
+      <div class="m" data-ch="2"><div class="mi"><div class="sys"><span>✓ All 4 kept it · Day 1 done</span></div></div></div>
+
+      <!-- chapter 3 -->
+      <div class="m" data-ch="3"><div class="mi"><div class="stamp-t">TUE 9:40 PM</div></div></div>
+      <div class="m" data-ch="3"><div class="mi"><div class="sys bad"><span>⏰ Kim hasn't checked in · 2h left</span></div></div></div>
+      <div class="m" data-ch="3" data-who="a1"><div class="mi"><div class="row"><i class="av a1">A</i><div class="bw"><span class="who">Alex</span><p class="b">kiiiim 👀</p></div></div></div></div>
+      <div class="m" data-ch="3"><div class="mi"><div class="row me"><div class="bw"><p class="b">tell me that's not a delivery driver at your door</p></div></div></div></div>
+      <div class="m" data-ch="3" data-who="a3"><div class="mi"><div class="row"><i class="av a3">K</i><div class="bw"><span class="who">Kim</span><p class="b">…it was already on the way</p></div></div></div></div>
+      <div class="m" data-ch="3" data-who="a3"><div class="mi"><div class="row"><span class="sp"></span><div class="bw"><p class="b">it was pad thai. I regret nothing</p></div></div></div></div>
+      <div class="m" data-ch="3"><div class="mi"><div class="sys bad"><span>✕ Kim missed Tuesday</span></div></div></div>
+      <div class="m" data-ch="3" data-who="a2"><div class="mi has-rx"><div class="row"><i class="av a2">R</i><div class="bw"><span class="who">Ravi</span><p class="b">DARE. TIME.<span class="rx">😂 3</span></p></div></div></div></div>
+
+      <!-- chapter 4 -->
+      <div class="m" data-ch="4"><div class="mi"><div class="stamp-t">SUN 6:00 PM</div></div></div>
+      <div class="m" data-ch="4"><div class="mi"><div class="card-in">
+        <span class="k">Week 1 · Final</span>
+        <span class="t">Crew kept 27 of 28 days</span>
+        <div class="pg"><b>Alex</b><i class="cell k"></i><i class="cell k"></i><i class="cell k"></i><i class="cell k"></i><i class="cell k"></i><i class="cell k"></i><i class="cell k"></i><span>7/7</span></div>
+        <div class="pg"><b>Ravi</b><i class="cell k"></i><i class="cell k"></i><i class="cell k"></i><i class="cell k"></i><i class="cell k"></i><i class="cell k"></i><i class="cell k"></i><span>7/7</span></div>
+        <div class="pg"><b>You</b><i class="cell k"></i><i class="cell k"></i><i class="cell k"></i><i class="cell k"></i><i class="cell k"></i><i class="cell k"></i><i class="cell k"></i><span>7/7</span></div>
+        <div class="pg lose"><span>Kim</span><i class="cell k"></i><i class="cell x"></i><i class="cell k"></i><i class="cell k"></i><i class="cell k"></i><i class="cell k"></i><i class="cell k"></i><span>6/7</span></div>
+      </div></div></div>
+      <div class="m" data-ch="4"><div class="mi"><div class="card-in">
+        <span class="k">Poll · Kim's dare</span>
+        <span class="t">What does Kim have to do?</span>
+        <div class="poll">
+          <div class="opt win" style="--v:100%"><span>Wear a cape to class Monday 🦸</span><small>3</small></div>
+          <div class="opt" style="--v:0%"><span>Worst selfie as profile pic for 24h</span><small>0</small></div>
+          <div class="opt" style="--v:0%"><span>Talk like a pirate at dinner</span><small>0</small></div>
+        </div>
+      </div></div></div>
+      <div class="m" data-ch="4" data-who="a3"><div class="mi"><div class="row"><i class="av a3">K</i><div class="bw"><span class="who">Kim</span><p class="b">a CAPE??</p></div></div></div></div>
+      <div class="m" data-ch="4" data-who="a3"><div class="mi has-rx"><div class="row"><span class="sp"></span><div class="bw"><p class="b">fine. next week I'm winning<span class="rx">🦸 3</span></p></div></div></div></div>
+      <div class="m" data-ch="4"><div class="mi"><div class="row me"><div class="bw"><p class="b">same time next week? 😌</p><span class="read">Read by 3</span></div></div></div></div>
+      <div class="m" data-ch="4"><div class="mi"><div class="sys"><span>📜 Alex started a new pact: No Impulse Buys</span></div></div></div>
+
+      <div class="typing" id="typing" aria-hidden="true"><i class="av a1">A</i><span class="dots"><i></i><i></i><i></i></span></div>
+    </div>
+
+    <div class="composer" aria-hidden="true"><span class="in">Message</span><span class="ci">✓ Check in</span></div>
   </div>
 </div></section>
+
+<section class="dares" aria-label="Example dares"><div class="wrap head">
+  <h2>Last place picks the dare.</h2>
+  <p>The crew votes on it in the chat. Dares are silly on purpose: losing should be funny, never expensive.</p>
+</div>
+<div class="lanes">
+  <div class="lane">
+    <div class="dare"><small>Wardrobe</small><b>Wear a cape to class on Monday</b></div>
+    <div class="dare"><small>Online</small><b>Worst selfie as your profile pic for 24 hours</b></div>
+    <div class="dare"><small>At dinner</small><b>Talk like a pirate until dessert</b></div>
+    <div class="dare"><small>Wardrobe</small><b>Let the crew pick your outfit tomorrow</b></div>
+    <div class="dare"><small>Online</small><b>Post a 10-second interpretive dance</b></div>
+    <div class="dare" aria-hidden="true"><small>Wardrobe</small><b>Wear a cape to class on Monday</b></div>
+    <div class="dare" aria-hidden="true"><small>Online</small><b>Worst selfie as your profile pic for 24 hours</b></div>
+    <div class="dare" aria-hidden="true"><small>At dinner</small><b>Talk like a pirate until dessert</b></div>
+    <div class="dare" aria-hidden="true"><small>Wardrobe</small><b>Let the crew pick your outfit tomorrow</b></div>
+    <div class="dare" aria-hidden="true"><small>Online</small><b>Post a 10-second interpretive dance</b></div>
+  </div>
+  <div class="lane rev">
+    <div class="dare"><small>Group chat</small><b>Only emojis in the chat for a whole day</b></div>
+    <div class="dare"><small>Out loud</small><b>Sing a song the crew picks, in full</b></div>
+    <div class="dare"><small>Wardrobe</small><b>Socks with sandals, all day</b></div>
+    <div class="dare"><small>Wholesome</small><b>Compliment three strangers' dogs</b></div>
+    <div class="dare"><small>Group chat</small><b>Write the crew a poem about your failure</b></div>
+    <div class="dare" aria-hidden="true"><small>Group chat</small><b>Only emojis in the chat for a whole day</b></div>
+    <div class="dare" aria-hidden="true"><small>Out loud</small><b>Sing a song the crew picks, in full</b></div>
+    <div class="dare" aria-hidden="true"><small>Wardrobe</small><b>Socks with sandals, all day</b></div>
+    <div class="dare" aria-hidden="true"><small>Wholesome</small><b>Compliment three strangers' dogs</b></div>
+    <div class="dare" aria-hidden="true"><small>Group chat</small><b>Write the crew a poem about your failure</b></div>
+  </div>
+</div>
+</section>
 
 <section class="privacy" id="why"><div class="wrap">
   <div class="rv">
