@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pact — Get early access</title>
+<meta name="description" content="Be the first to try Pact. Just leave your email.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+<style>
+.join{min-height:calc(100vh - 64px - 120px);display:grid;place-items:center;padding:72px 0}
+.join-card{max-width:620px;margin:0 auto;text-align:center}
+.join h1{font-size:clamp(2.4rem,5.4vw,4rem)}
+
+.join .lede{margin:18px auto 0}
+.join .email-form{margin:34px auto 0}
+.join .fine{margin-top:18px;font-size:.88rem;color:var(--muted)}
+.join .form-msg.ok{font-size:1.1rem}
+.after{display:none;margin-top:22px}
+.after.show{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<nav class="nav" aria-label="Main"><div class="wrap">
+  <a class="brand" href="index.html" aria-label="Pact home"><span class="brand-mark" aria-hidden="true"><span></span></span>Pact</a>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="prototype.html">Try it</a>
+    <a class="cta" href="survey.html" aria-current="page">Get early access</a>
+  </div>
+</div></nav>
+
+<main id="main" class="join"><div class="wrap">
+  <div class="join-card">
+    <h1>Be the first to make a pact.</h1>
+    <p class="lede">Pact is coming soon. Leave your email and we'll let you know when it's ready.</p>
+    <form class="email-form" data-signup novalidate>
+      <label for="email" class="sr-only">Email address</label>
+      <input type="email" id="email" placeholder="you@example.com" autocomplete="email" maxlength="254" required>
+      <span class="hp" aria-hidden="true"><input type="text" name="website" tabindex="-1" autocomplete="off"></span>
+      <button class="btn btn-primary" type="submit">Join the list</button>
+    </form>
+    <p class="form-msg" role="status" aria-live="polite"></p>
+    <div class="after" id="after"><a class="btn btn-ghost" href="prototype.html">Try the demo →</a></div>
+    <p class="fine">No spam. We'll only email you about Pact.</p>
+  </div>
+</div></main>
+
+<footer><div class="wrap">
+  <span>© <span id="year">2026</span> Pact</span>
+  <span style="display:flex;gap:18px"><a href="index.html">Home</a><a href="prototype.html">Try it</a><a href="survey.html">Early access</a></span>
+</div></footer>
+
+<script src="assets/site.js"></script>
+<script src="assets/config.js"></script>
+<script src="assets/signup.js"></script>
+<script>
+// show "Try the demo" once signed up
+new MutationObserver(function(){ var m=document.querySelector('.form-msg'); if(m.classList.contains('ok')) document.getElementById('after').classList.add('show'); })
+  .observe(document.querySelector('.form-msg'),{attributes:true});
+</script>
+</html>

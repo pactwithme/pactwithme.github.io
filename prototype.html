@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pact — Try it</title>
+<meta name="description" content="Tap through an interactive demo of Pact.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+<style>
+.proto-head{padding:48px 0 20px;text-align:center}
+.proto-head .lede{margin:12px auto 0}
+.stage{display:grid;grid-template-columns:260px 1fr 260px;gap:32px;align-items:start;padding-bottom:72px}
+.panel{background:var(--paper);border:1px solid var(--line);border-radius:20px;padding:18px;position:sticky;top:88px}
+.panel h2{font-family:var(--sans);font-size:.75rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 10px 6px}
+.tour{list-style:none;margin:0;padding:0;counter-reset:t;display:grid;gap:2px}
+.tour li{counter-increment:t}
+.tour button{all:unset;cursor:pointer;display:flex;align-items:center;gap:12px;padding:10px 8px;border-radius:12px;font-size:.95rem;width:100%;box-sizing:border-box}
+.tour button::before{content:counter(t);flex:none;width:26px;height:26px;border-radius:50%;background:#F1EDE6;color:var(--muted);font-weight:700;font-size:.78rem;display:grid;place-items:center}
+.tour button:hover{background:rgba(27,67,50,.06)}
+.tour button.on{background:rgba(27,67,50,.08);font-weight:600}
+.tour button.on::before{background:var(--green);color:#fff}
+.tour button:focus-visible{outline:3px solid var(--green-3);outline-offset:1px}
+.reset{margin-top:12px;width:100%;justify-content:center;padding:10px 14px;font-size:.88rem}
+.device{position:relative;display:flex;flex-direction:column;align-items:center}
+iframe#app{width:100%;max-width:440px;height:min(880px,calc(100vh - 110px));min-height:620px;border:0;background:transparent}
+.note{font-size:.85rem;color:var(--muted);margin-top:4px;text-align:center}
+.side-cta{position:sticky;top:88px;background:var(--green);color:#fff;border-radius:20px;padding:24px}
+.side-cta h2{font-size:1.4rem;color:#fff}
+.side-cta p{color:#D3E3D8;margin:8px 0 18px;font-size:.95rem}
+.side-cta .btn{background:var(--gold);color:#2A1E10;width:100%;justify-content:center}
+.side-cta .btn:hover{background:#E1B887}
+@media (max-width:1100px){.stage{grid-template-columns:1fr}.device{order:-1}.panel,.side-cta{position:static;max-width:440px;margin:0 auto;width:100%}}
+</style>
+</head>
+<body>
+<a class="skip" href="#app">Skip to the demo</a>
+
+<nav class="nav" aria-label="Main"><div class="wrap">
+  <a class="brand" href="index.html" aria-label="Pact home"><span class="brand-mark" aria-hidden="true"><span></span></span>Pact</a>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="prototype.html" aria-current="page">Try it</a>
+    <a class="cta" href="survey.html">Get early access</a>
+  </div>
+</div></nav>
+
+<main>
+<header class="proto-head"><div class="wrap">
+  <h1 style="font-size:clamp(2.2rem,4.4vw,3.2rem)">Take Pact for a spin.</h1>
+  <p class="lede">Tap around the phone, or use the steps to jump ahead.</p>
+</div></header>
+
+<div class="wrap stage">
+  <nav class="panel" aria-label="Demo steps">
+    <h2>Steps</h2>
+    <ol class="tour">
+      <li><button data-state="welcome">Welcome</button></li>
+      <li><button data-state="home">Your home screen</button></li>
+      <li><button data-state="create_pact">Make a pact</button></li>
+      <li><button data-state="active_pact">Check in each day</button></li>
+      <li><button data-state="app_temptation">Resist the urge</button></li>
+      <li><button data-state="everyone_succeeds">Everyone wins</button></li>
+      <li><button data-state="unique_last">Someone finishes last</button></li>
+      <li><button data-state="weekly_recap">Your weekly recap</button></li>
+    </ol>
+    <button class="btn btn-ghost reset" id="reset">↺ Start over</button>
+  </nav>
+
+  <div class="device">
+    <iframe id="app" src="prototype/app/index.html" title="Interactive Pact demo"></iframe>
+    <p class="note">Demo only. No real money moves.</p>
+  </div>
+
+  <aside class="side-cta">
+    <h2>Like what you see?</h2>
+    <p>Get early access when Pact launches.</p>
+    <a class="btn" href="survey.html">Get early access →</a>
+  </aside>
+</div>
+</main>
+
+<footer><div class="wrap">
+  <span>© <span id="year">2026</span> Pact</span>
+  <span style="display:flex;gap:18px"><a href="index.html">Home</a><a href="prototype.html">Try it</a><a href="survey.html">Early access</a></span>
+</div></footer>
+
+<script src="assets/site.js"></script>
+<script>
+(function(){
+  var frame=document.getElementById('app');
+  function mark(state){ document.querySelectorAll('[data-state]').forEach(function(b){ var on=b.dataset.state===state; b.classList.toggle('on',on); if(on) b.setAttribute('aria-current','step'); else b.removeAttribute('aria-current'); }); }
+  document.addEventListener('click',function(e){
+    var b=e.target.closest('[data-state]'); if(!b) return;
+    try{ frame.contentWindow.postMessage({type:'pact-demo',state:b.dataset.state},'*'); }catch(err){}
+    mark(b.dataset.state);
+  });
+  document.getElementById('reset').addEventListener('click',function(){
+    try{ frame.contentWindow.postMessage({type:'pact-reset'},'*'); }catch(err){}
+    mark('welcome');
+  });
+  window.addEventListener('message',function(e){ var d=e.data; if(d&&d.type==='pact-screen'&&d.demo) mark(d.demo); });
+  mark('welcome');
+})();
+</script>
+</html>

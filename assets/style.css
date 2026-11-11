@@ -1,0 +1,110 @@
+/* Pact shared styles.
+   Layout idea: the pact is a paper slip people sign. Plain, left-aligned pages
+   on a cool green-grey ground; the receipt carries the personality. */
+:root{
+  /* palette */
+  --green:#1B4332;      /* brand, matches the demo app */
+  --green-2:#2D6A4F;
+  --green-3:#40916C;
+  --mint:#DCEFE2;
+  --coral:#D9534A;      /* a missed day */
+  --gold:#E3B341;       /* highlighter, used sparingly */
+  --gold-2:#FBEFC8;
+  --cream:#EFF2EE;      /* page ground (name kept for older pages) */
+  --paper:#FFFFFF;      /* slips, panels */
+  --ink:#15211C;
+  --muted:#59655F;
+  --line:#D5DCD5;
+
+  /* type */
+  --display:'Bricolage Grotesque', 'Inter', system-ui, sans-serif;
+  --sans:'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --mono:'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+  --hand:'Caveat', 'Bradley Hand', cursive;
+
+  --radius:10px; --max:1160px;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:var(--sans);color:var(--ink);background:var(--cream);line-height:1.55;-webkit-font-smoothing:antialiased}
+a{color:inherit}
+img{max-width:100%}
+.wrap{max-width:var(--max);margin:0 auto;padding-left:max(20px, env(safe-area-inset-left, 0px));padding-right:max(20px, env(safe-area-inset-right, 0px))}
+h1,h2,h3{font-family:var(--display);font-weight:700;letter-spacing:-.025em;line-height:1.02;margin:0;text-wrap:balance}
+h1{font-size:clamp(2.6rem,6.4vw,5.2rem)}
+h2{font-size:clamp(1.9rem,3.8vw,3rem)}
+h3{font-size:1.3rem;letter-spacing:-.01em}
+p{margin:0}
+.eyebrow{font-family:var(--mono);font-size:.78rem;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--green-2)}
+.lede{font-size:1.15rem;color:var(--muted);max-width:56ch}
+.muted{color:var(--muted)}
+
+/* nav */
+.nav{position:sticky;top:0;z-index:40;background:color-mix(in srgb, var(--cream) 88%, transparent);backdrop-filter:blur(10px);border-bottom:1px solid transparent;transition:border-color .2s}
+.nav.scrolled{border-bottom-color:var(--line)}
+.nav .wrap{display:flex;align-items:center;justify-content:space-between;height:64px;gap:16px}
+.brand{display:flex;align-items:center;gap:9px;text-decoration:none;font-family:var(--display);font-weight:800;font-size:1.4rem;letter-spacing:-.03em;color:var(--green)}
+.brand-mark{width:26px;height:26px;border-radius:7px;background:var(--green);display:grid;place-items:center}
+.brand-mark span{width:11px;height:11px;border-radius:50%;border:2.5px solid var(--gold);box-shadow:5px 0 0 -2.5px var(--green),5px 0 0 0 var(--gold)}
+.nav-links{display:flex;align-items:center;gap:2px}
+.nav-links a{text-decoration:none;font-size:.92rem;font-weight:500;padding:8px 12px;border-radius:8px;color:var(--muted);white-space:nowrap}
+.nav-links a:hover{color:var(--ink)}
+.nav-links a[aria-current="page"]{color:var(--ink);font-weight:600;text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:6px}
+.nav-links a.cta{background:var(--green);color:#fff;margin-left:8px;text-decoration:none}
+.nav-links a.cta:hover{background:var(--green-2)}
+@media (max-width:640px){.nav-links a:not(.cta){padding:8px 8px;font-size:.86rem}.brand{font-size:1.2rem}}
+@media (max-width:480px){.nav-links a[href="index.html"]{display:none}.nav-links a.cta{padding:8px 12px}}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;gap:10px;padding:14px 22px;border-radius:var(--radius);font-weight:600;font-size:.98rem;text-decoration:none;border:1.5px solid transparent;cursor:pointer;transition:transform .12s, background .15s, border-color .15s;font-family:inherit}
+.btn:active{transform:translateY(1px)}
+.btn-primary{background:var(--green);color:#fff}
+.btn-primary:hover{background:var(--green-2)}
+.btn-ghost{border-color:var(--line);background:var(--paper);color:var(--ink)}
+.btn-ghost:hover{border-color:var(--green-2)}
+.btn[disabled]{opacity:.65;cursor:wait}
+
+/* sections */
+section{padding:96px 0}
+.section-head{display:grid;gap:14px;margin-bottom:44px;max-width:760px}
+.band{background:var(--paper);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:28px}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:20px}
+@media (max-width:900px){.grid-3,.grid-2{grid-template-columns:1fr}section{padding:72px 0}}
+
+/* footer */
+footer{padding:40px 0 48px;border-top:1px solid var(--line);font-size:.88rem;color:var(--muted)}
+footer .wrap{display:flex;flex-wrap:wrap;gap:16px;justify-content:space-between;align-items:center}
+footer a{text-decoration:none}
+footer a:hover{color:var(--ink)}
+
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:.78rem;font-weight:600;padding:4px 10px;border-radius:6px;background:var(--mint);color:var(--green)}
+.pill.coral{background:#FBE3E0;color:#A6322A}
+.pill.gold{background:var(--gold-2);color:#6E5310}
+.pill.gray{background:#E4E8E3;color:var(--muted)}
+
+/* content stays visible at rest; motion only adds a small lift */
+.reveal{opacity:1}
+@media (prefers-reduced-motion:no-preference){.reveal{animation:lift .6s ease both}}
+@keyframes lift{from{transform:translateY(10px);opacity:.01}}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+
+/* accessibility */
+.skip{position:absolute;left:12px;top:-60px;z-index:100;background:var(--green);color:#fff;padding:10px 16px;border-radius:8px;font-weight:600;text-decoration:none}
+.skip:focus{top:12px}
+a:focus-visible,button:focus-visible,input:focus-visible,summary:focus-visible{outline:3px solid var(--green-3);outline-offset:3px;border-radius:6px}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0}
+
+/* shared email form */
+.email-form{display:flex;gap:8px;max-width:480px}
+.email-form input{flex:1;min-width:0;font:inherit;font-size:1rem;padding:14px 16px;border:1.5px solid var(--line);border-radius:var(--radius);background:var(--paper);color:var(--ink)}
+.email-form input:focus{outline:none;border-color:var(--green-3);box-shadow:0 0 0 4px rgba(64,145,108,.18)}
+.email-form input.bad{border-color:var(--coral)}
+.email-form .btn{white-space:nowrap}
+.form-msg{min-height:22px;margin-top:10px;font-size:.92rem}
+.form-msg.err{color:#A6322A}
+.form-msg.ok{color:var(--green);font-weight:600}
+.hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+@media (max-width:520px){.email-form{flex-direction:column}.email-form .btn{justify-content:center}}
