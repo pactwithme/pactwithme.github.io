@@ -31,7 +31,13 @@ Every sign-up form posts to a Google Apps Script web app, which adds one row to 
 |---|---|---|---|
 
 - The same email is only stored once.
-- A hidden honeypot field filters out simple bots.
+- Basic filtering runs before anything is stored:
+  - a hidden honeypot field, and a minimum of 1.5 s on the page before submitting
+  - stricter address checks, with a "did you mean …@gmail.com?" reply for common typos
+  - throwaway/disposable domains are refused, and the domain must accept mail (MX lookup via Google Public DNS)
+  - a site-wide cap of 8 sign-ups per minute and 30 per 10 minutes
+- Refused attempts are not stored; see them under **Apps Script → Executions** (logged as "Rejected sign-up").
+- To tune it, edit the constants and lists at the top of `google-apps-script/Code.gs`, then redeploy (below).
 - Add `?src=<channel>` to any link you share (for example `?src=instagram`) and it shows up in the **Source** column.
 
 The endpoint URL lives in `assets/config.js`. If it's left empty, the forms show "Sign-ups aren't switched on yet" instead of failing silently.

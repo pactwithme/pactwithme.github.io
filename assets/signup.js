@@ -24,7 +24,8 @@
       // text/plain keeps this a "simple" request, so the browser skips the
       // CORS preflight that Apps Script can't answer.
       fetch(ENDPOINT,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},
-        body:JSON.stringify({email:email,source:source(),page:location.pathname,website:hp?hp.value:''})})
+        // t = ms the page was open before submitting; the script rejects instant (bot) submits
+        body:JSON.stringify({email:email,source:source(),page:location.pathname,website:hp?hp.value:'',t:Math.round(performance.now())})})
       .then(function(r){ return r.json().catch(function(){ return {ok:false}; }); })
       .then(function(d){
         if(!d.ok) throw new Error(d.error||'Something went wrong. Please try again.');
