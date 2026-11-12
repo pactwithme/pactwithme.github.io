@@ -9,13 +9,14 @@ It's a plain static site (HTML, CSS and JavaScript). There's no build step: ever
 ## What's in the repo
 
 ```
-index.html                  Home page: receipt hero, scroll-driven group chat, dare wall,
+index.html                  Home page: receipt hero, product demo video, dare wall,
                             drag-to-compare privacy view, savings goals, sign-up
 prototype.html              "Try it" page; embeds the clickable demo in prototype/app/
 survey.html                 "Get early access" sign-up page
 assets/style.css            Shared styles and color/type tokens for all pages
 assets/site.js              Nav shadow on scroll, footer year
-assets/home.js              Home page motion (chat playback, word reveal, compare handle, goal bars)
+assets/home.js              Home page motion (demo video player, word reveal, compare handle, goal bars)
+assets/video/               Demo video (1080p and 720p for phones) and its poster frame
 assets/config.js            URL of the Google Apps Script that stores sign-ups
 assets/signup.js            Early-access form logic used on every page
 prototype/app/              Compiled demo app (React bundle; edit the original source, not this)
@@ -54,7 +55,8 @@ The endpoint URL lives in `assets/config.js`. If it's left empty, the forms show
 
 - **Preview locally:** run `python3 -m http.server 8000` in this folder and open http://localhost:8000.
 - **Cache busting:** browsers cache CSS and JS for about 10 minutes. When you change a file in `assets/`, bump the `?v=` number where it's linked in the HTML pages so visitors get the new version straight away.
-- **Motion:** visitors who turn on "reduce motion" in their system settings get a static version. The chat shows in full and nothing animates.
+- **Motion:** visitors who turn on "reduce motion" in their system settings get a static version: the demo video waits for a click instead of autoplaying.
+- **Demo video:** to replace it, export a new MP4 and overwrite `assets/video/pact-demo.mp4` (1080p) and `pact-demo-720.mp4` (phones). Chapter times are the `data-t` values in `index.html`.
 
 ## Custom domain
 

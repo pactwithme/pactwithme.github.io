@@ -1,11 +1,8 @@
-// Home page motion: scroll-linked words, the group chat that plays as you scroll,
+// Home page motion: scroll-linked words, the demo video player,
 // gentle parallax on the receipt, and section reveals.
 (function(){
   var root = document.documentElement;
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  // Only this script turns on scroll mode, so a stale or failed script never hides the chat.
-  var scrolly = !reduce;
-  if(scrolly) root.classList.add('scrolly');
   function clamp(v,a,b){ return Math.max(a, Math.min(b, v)); }
 
   /* 1. Manifesto: words light up as the paragraph scrolls through */
@@ -26,64 +23,47 @@
   }
   if(manifesto && !reduce) split(manifesto);
 
-  /* 2. The group chat. Scrolling sets how far the conversation should be; a small
-        player then delivers messages one at a time, so a fast flick never skips any. */
-  var story = document.querySelector('.story');
-  var msgs = story ? Array.prototype.slice.call(story.querySelectorAll('.m')) : [];
-  var chapters = story ? story.querySelectorAll('.ch') : [];
-  var dots = story ? story.querySelectorAll('.ch-dots i') : [];
-  var typing = document.getElementById('typing');
-  var typingAv = typing && typing.querySelector('.av');
-  var streak = story && story.querySelector('.streak');
-  var streakText = {1:'Starts Mon', 2:'Day 1 of 7', 3:'Day 2 of 7', 4:'Week done ✓'};
-  var NAMES = {a1:'A', a2:'R', a3:'K', a4:'Y'};
-  var START = 2;                    // the timestamp and Alex's first message are there from the start
-  var PACE = 420, TYPE = 600, RUSH = 170, REWIND = 45;   // ms
-  var shown = 0, target = START, chapter = 0, timer = null, typingFor = null;
-  // about 18% of a screen of scrolling per message
-  if(story && scrolly) story.style.setProperty('--n', Math.round(msgs.length * 1.2));
-
-  function setChapter(c){
-    if(c === chapter) return; chapter = c;
-    chapters.forEach(function(el){ el.classList.toggle('on', +el.dataset.ch === c); });
-    dots.forEach(function(el){ el.classList.toggle('on', +el.dataset.ch <= c); });
-    if(streak) streak.textContent = streakText[c];
+  /* 2. Product demo video: plays muted while on screen, sound on request, chapter jumps */
+  var player = document.getElementById('player'), film = document.getElementById('film');
+  var chaps = Array.prototype.slice.call(document.querySelectorAll('#chaps button'));
+  var snd = document.getElementById('snd'), pp = document.getElementById('pp'), fs = document.getElementById('fs'), big = document.getElementById('bigplay');
+  var userPaused = false, inView = false;
+  function play(){ var p = film.play(); if(p && p.catch) p.catch(function(){}); }
+  function setSound(on){
+    film.muted = !on; snd.setAttribute('aria-pressed', on ? 'true' : 'false');
+    snd.querySelector('span').textContent = on ? '🔊' : '🔇';
+    snd.querySelector('.t').textContent = on ? 'Sound on' : 'Tap for sound';
   }
-  function setTyping(who){
-    typingFor = who;
-    if(!typing) return;
-    typing.classList.toggle('on', !!who);
-    if(who){ typingAv.className = 'av ' + who; typingAv.textContent = NAMES[who]; }
-  }
-  function render(){
-    for(var i = 0; i < msgs.length; i++) msgs[i].classList.toggle('show', i < shown);
-    if(shown) setChapter(+msgs[shown - 1].dataset.ch);
-  }
-  function step(){
-    timer = null;
-    if(shown < target){
-      var backlog = target - shown, who = msgs[shown].dataset.who;
-      // a friend's message gets a moment of "typing…" first, unless we're catching up
-      if(who && backlog <= 2 && typingFor !== who){ setTyping(who); timer = setTimeout(step, TYPE); return; }
-      setTyping(null); shown++; render();
-      timer = setTimeout(step, backlog > 3 ? RUSH : PACE);
-    } else if(shown > target){
-      setTyping(null); shown--; render();
-      timer = setTimeout(step, REWIND);
-    } else {
-      setTyping(null);
+  if(player && film){
+    setSound(false); snd.querySelector('span').textContent = '🔊';
+    film.addEventListener('play', function(){ player.classList.add('playing'); pp.textContent = '❚❚'; pp.setAttribute('aria-label','Pause'); });
+    film.addEventListener('pause', function(){ player.classList.remove('playing'); pp.textContent = '▶'; pp.setAttribute('aria-label','Play'); });
+    big.addEventListener('click', function(){ userPaused = false; setSound(true); play(); });
+    snd.addEventListener('click', function(){ setSound(film.muted); if(film.paused){ userPaused = false; play(); } });
+    pp.addEventListener('click', function(){ if(film.paused){ userPaused = false; play(); } else { userPaused = true; film.pause(); } });
+    film.addEventListener('click', function(){ pp.click(); });
+    fs.addEventListener('click', function(){
+      setSound(true); play();
+      if(film.requestFullscreen) film.requestFullscreen(); else if(film.webkitEnterFullscreen) film.webkitEnterFullscreen();
+    });
+    chaps.forEach(function(b){ b.addEventListener('click', function(){ film.currentTime = +b.dataset.t; userPaused = false; play(); }); });
+    film.addEventListener('timeupdate', function(){
+      var t = film.currentTime;
+      chaps.forEach(function(b){
+        var s0 = +b.dataset.t, s1 = +b.dataset.end, on = t >= s0 && t < s1;
+        b.classList.toggle('on', on);
+        b.style.setProperty('--p', on ? ((t - s0) / (s1 - s0)).toFixed(3) : (t >= s1 ? 1 : 0));
+      });
+    });
+    // autoplay (muted) only while the player is mostly on screen, and never for reduced motion
+    if('IntersectionObserver' in window){
+      new IntersectionObserver(function(entries){
+        inView = entries[0].isIntersecting;
+        if(inView && !reduce && !userPaused) play();
+        else if(!inView && !film.paused){ film.pause(); }
+      }, {threshold: 0.55}).observe(player);
     }
   }
-  function updateChat(vh){
-    var r = story.getBoundingClientRect();
-    var span = Math.max(1, r.height - vh);
-    var p = clamp(-r.top / span, 0, 1);
-    // reach the last message a little before the card unpins
-    var t = clamp(START + Math.floor(p * 1.08 * (msgs.length - START + 1)), START, msgs.length);
-    if(t !== target){ target = t; if(!timer) step(); }
-  }
-  if(story && scrolly){ shown = START; render(); }
-  if(!scrolly && chapters.length) chapters[0].classList.add('on');
 
   /* 3. Hero receipt drifts slower than the page */
   var pact = document.querySelector('.pact');
@@ -104,7 +84,10 @@
         var lit = p * (words.length + 4);
         for(var i = 0; i < words.length; i++) words[i].style.setProperty('--o', clamp(lit - i, 0.14, 1).toFixed(2));
       }
-      if(story && scrolly) updateChat(vh);
+      if(player && !reduce){
+        var pr = player.getBoundingClientRect();
+        player.style.setProperty('--fs', (0.9 + 0.1 * clamp((vh - pr.top) / (vh * 0.75), 0, 1)).toFixed(4));
+      }
     });
   }
   window.addEventListener('scroll', onScroll, {passive: true});

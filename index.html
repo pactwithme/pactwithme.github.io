@@ -104,112 +104,47 @@
 .manifesto .w{transition:opacity .2s linear;opacity:var(--o,1)}
 .manifesto em{font-style:normal;color:var(--green-2)}
 
-/* ---------- story: a group chat that plays as you scroll ---------- */
-.story{position:relative;margin-top:40px}
-.scrolly .story{height:calc(var(--n,20) * 15vh + 100vh)}
-.pin{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,400px);gap:72px;align-items:center;padding-block:40px}
-.scrolly .pin{position:sticky;top:64px;height:calc(100vh - 64px);height:calc(100svh - 64px);padding-block:24px}
-
-.chapters{position:relative;min-height:15rem}
-.ch{display:grid;gap:16px;max-width:30rem}
-.ch .when{font-family:var(--mono);font-size:.8rem;letter-spacing:.08em;text-transform:uppercase;color:var(--green-2)}
-.ch h2{font-size:clamp(2.2rem,4.6vw,3.8rem)}
-.ch h2 em{font-style:normal;color:var(--coral)}
-.scrolly .ch{position:absolute;inset:0 0 auto 0;opacity:0;transform:translateY(16px);transition:opacity .5s var(--ease), transform .5s var(--ease)}
-.scrolly .ch.on{opacity:1;transform:none}
-.ch-dots{display:flex;gap:8px;margin-top:28px}
-.scrolly .ch-dots{position:absolute;left:0;bottom:-3rem;margin:0}
-.ch-dots i{width:28px;height:4px;border-radius:2px;background:var(--line);transition:background .4s}
-.ch-dots i.on{background:var(--green)}
-html:not(.scrolly) .chapters .ch + .ch, html:not(.scrolly) .ch-dots{display:none}
-
-/* the phone-sized chat window */
-.phone{display:flex;flex-direction:column;height:min(720px, 100%);min-height:0;background:var(--paper);border:1px solid var(--line);border-radius:30px;overflow:hidden;box-shadow:0 40px 80px -40px rgba(21,33,28,.35), 0 2px 6px rgba(21,33,28,.05)}
-html:not(.scrolly) .phone{height:680px}
-.chat-head{display:flex;align-items:center;gap:12px;padding:14px 16px;border-bottom:1px solid var(--line);background:color-mix(in srgb, var(--paper) 92%, var(--cream))}
-.chat-head .back{font-size:1.4rem;line-height:1;color:var(--green-2)}
-.gav{position:relative;width:40px;height:40px;flex:none}
-.gav .av{position:absolute;width:24px;height:24px;font-size:.6rem;border:2px solid var(--paper)}
-.gav .av:nth-child(1){left:0;top:0}.gav .av:nth-child(2){right:0;top:0}.gav .av:nth-child(3){left:0;bottom:0}.gav .av:nth-child(4){right:0;bottom:0}
-.chat-head b{display:block;font-size:.98rem;white-space:nowrap}
-.chat-head small{display:block;font-size:.75rem;color:var(--muted)}
-.chat-head .streak{margin-left:auto;font-family:var(--mono);font-size:.72rem;color:var(--green-2);background:var(--mint);padding:4px 8px;border-radius:99px;white-space:nowrap}
-
-.thread{flex:1;min-height:0;display:flex;flex-direction:column;justify-content:flex-end;overflow:hidden;padding:4px 12px 12px;background:var(--paper)}
-html:not(.scrolly) .thread{justify-content:flex-start;overflow-y:auto}
-.m{display:grid;grid-template-rows:1fr;transition:grid-template-rows .4s var(--ease), opacity .35s var(--ease)}
-.m > .mi{min-height:0;overflow:hidden;padding-top:6px}
-.scrolly .m{grid-template-rows:0fr;opacity:0}
-.scrolly .m.show{grid-template-rows:1fr;opacity:1}
-.scrolly .m.show > .mi > *{animation:pop .4s var(--ease) both}
-@keyframes pop{from{transform:translateY(10px) scale(.96);opacity:.2}}
-
-.stamp-t{text-align:center;font-family:var(--mono);font-size:.66rem;letter-spacing:.06em;color:var(--muted);padding:10px 0 2px}
-.row{display:flex;align-items:flex-end;gap:7px}
-.row .av{width:26px;height:26px;font-size:.62rem}
-.row .sp{width:26px;flex:none}
-.row.me{justify-content:flex-end}
-.bw{display:grid;gap:2px;max-width:78%;justify-items:start}
-.row.me .bw{justify-items:end}
-.who{font-size:.68rem;color:var(--muted);padding-left:10px}
-.b{position:relative;padding:8px 12px;border-radius:18px;font-size:.9rem;line-height:1.35;background:#ECEFEB;color:var(--ink)}
-.row:not(.me) .b{border-bottom-left-radius:6px}
-.row.me .b{background:var(--green);color:#fff;border-bottom-right-radius:6px}
-.b.big{font-size:1.6rem;padding:4px 8px;background:none}
-.rx{position:absolute;right:-4px;bottom:-12px;background:var(--paper);border:1px solid var(--line);border-radius:99px;font-size:.68rem;padding:1px 6px;color:var(--ink);white-space:nowrap;box-shadow:0 2px 4px rgba(21,33,28,.06)}
-.row.me .rx{right:auto;left:-4px}
-.has-rx{padding-bottom:12px}
-.read{font-size:.66rem;color:var(--muted);padding-right:4px}
-
-.sys{display:flex;justify-content:center}
-.sys span{display:inline-flex;align-items:center;gap:6px;font-size:.74rem;padding:5px 11px;border-radius:99px;background:color-mix(in srgb, var(--mint) 70%, transparent);color:var(--green)}
-.sys.bad span{background:#FBE3E0;color:#9C2F27}
-
-/* cards inside the chat */
-.card-in{margin:6px 22px 4px;border:1px solid var(--line);border-radius:16px;padding:12px 14px;background:color-mix(in srgb, var(--cream) 45%, var(--paper));display:grid;gap:8px;font-size:.84rem}
-.card-in .k{font-family:var(--mono);font-size:.64rem;letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
-.card-in .t{font-family:var(--display);font-weight:700;font-size:1.15rem;letter-spacing:-.02em}
-.card-in .stakes{display:flex;gap:8px;align-items:flex-start;padding:8px 10px;border-radius:10px;background:var(--gold-2);color:#5A4410}
-.card-in .signed{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:.78rem}
-.card-in .stack .av{width:22px;height:22px;font-size:.55rem;border-color:var(--paper)}
-.pg{display:grid;grid-template-columns:3.2em repeat(7,1fr) 2.2em;gap:3px;align-items:center;font-size:.75rem}
-.pg .cell{height:12px}
-.pg b{font-weight:600}
-.pg span:last-child{text-align:right;font-family:var(--mono);color:var(--muted)}
-.pg.lose span:first-child{color:var(--coral);font-weight:600}
-.poll{display:grid;gap:6px}
-.opt{position:relative;display:flex;justify-content:space-between;gap:8px;padding:7px 10px;border-radius:10px;border:1px solid var(--line);overflow:hidden;background:var(--paper)}
-.opt::before{content:"";position:absolute;inset:0 auto 0 0;width:var(--v,0%);background:color-mix(in srgb, var(--mint) 80%, transparent);z-index:0}
-.opt > *{position:relative}
-.opt.win{border-color:var(--green-3);font-weight:600}
-.opt.win::before{background:color-mix(in srgb, var(--green-3) 28%, transparent)}
-.opt small{font-family:var(--mono);color:var(--muted)}
-
-.typing{display:flex;align-items:flex-end;gap:7px;padding:6px 0 0;height:0;opacity:0;overflow:hidden;transition:opacity .2s}
-.typing.on{height:auto;opacity:1}
-.typing .av{width:26px;height:26px;font-size:.62rem}
-.dots{display:inline-flex;gap:4px;padding:11px 12px;border-radius:18px;border-bottom-left-radius:6px;background:#ECEFEB}
-.dots i{width:6px;height:6px;border-radius:50%;background:#98A39D;animation:dot 1s infinite}
-.dots i:nth-child(2){animation-delay:.15s}.dots i:nth-child(3){animation-delay:.3s}
-@keyframes dot{0%,60%,100%{transform:none;opacity:.5}30%{transform:translateY(-3px);opacity:1}}
-
-.composer{display:flex;gap:8px;align-items:center;padding:10px 12px 14px;border-top:1px solid var(--line)}
-.composer .in{flex:1;padding:9px 14px;border-radius:99px;border:1px solid var(--line);color:#9AA59F;font-size:.88rem}
-.composer .ci{padding:9px 14px;border-radius:99px;background:var(--green);color:#fff;font-size:.82rem;font-weight:600;white-space:nowrap}
-
+/* ---------- film: the product demo video ---------- */
+.film{background:#0E2219;color:#EAF2EC;padding:120px 0 110px;margin-top:80px;overflow:hidden;
+  background-image:radial-gradient(60% 60% at 70% 45%,rgba(64,145,108,.28),transparent 70%)}
+.film-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:end;gap:20px 48px}
+.film-head .eyebrow{color:var(--gold)}
+.film-head>div{flex:1 1 440px}
+.film-head h2{color:#F1F6F2;max-width:15ch;margin-top:14px}
+.film-head p{max-width:32ch;color:#A9C0B3;font-size:1.08rem}
+.player{--fs:1;position:relative;margin:48px 0 0;border-radius:26px;overflow:hidden;background:#0B1A13;aspect-ratio:16/9;
+  box-shadow:0 0 0 1px rgba(216,235,223,.12),0 60px 120px -50px rgba(0,0,0,.8);transform:scale(var(--fs));transform-origin:50% 0;will-change:transform}
+.player video{display:block;width:100%;height:100%;object-fit:cover;cursor:pointer}
+.pbar{position:absolute;left:0;right:0;bottom:0;display:flex;gap:10px;align-items:center;justify-content:flex-end;padding:16px;pointer-events:none}
+.pbtn{pointer-events:auto;display:inline-flex;align-items:center;gap:8px;height:42px;padding:0 16px;border:0;border-radius:99px;font:600 .9rem var(--sans);cursor:pointer;
+  background:rgba(14,34,25,.72);color:#fff;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);box-shadow:0 0 0 1px rgba(255,255,255,.14);transition:background .2s,transform .2s}
+.pbtn:hover{background:rgba(14,34,25,.9);transform:translateY(-1px)}
+.pbtn:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.pbtn.snd{background:var(--gold);color:#2B2306;box-shadow:none}
+.pbtn.snd[aria-pressed="true"]{background:rgba(14,34,25,.72);color:#fff;box-shadow:0 0 0 1px rgba(255,255,255,.14)}
+.pbtn.icon{width:42px;padding:0;justify-content:center}
+.bigplay{position:absolute;left:50%;top:50%;width:92px;height:92px;margin:-46px 0 0 -46px;border-radius:50%;border:0;background:var(--gold);color:#2B2306;font-size:1.9rem;
+  display:grid;place-items:center;cursor:pointer;box-shadow:0 20px 40px -12px rgba(0,0,0,.6);transition:transform .25s var(--ease),opacity .25s}
+.bigplay:hover{transform:scale(1.06)}
+.player.playing .bigplay{opacity:0;pointer-events:none;transform:scale(.8)}
+.chaps{list-style:none;margin:22px 0 0;padding:0;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
+.chaps button{width:100%;text-align:left;border:0;background:none;color:#8FA99B;font:inherit;cursor:pointer;padding:0;display:grid;gap:8px}
+.chaps .ln{height:3px;border-radius:2px;background:rgba(216,235,223,.16);overflow:hidden}
+.chaps .ln i{display:block;height:100%;width:calc(var(--p,0)*100%);background:var(--gold)}
+.chaps small{font-family:var(--mono);font-size:.72rem;letter-spacing:.08em}
+.chaps b{font-weight:600;font-size:.98rem;color:#CFE1D6;transition:color .2s}
+.chaps button:hover b,.chaps .on b{color:#fff}
+.chaps .on small{color:var(--gold)}
+.chaps button:focus-visible{outline:2px solid var(--gold);outline-offset:6px;border-radius:4px}
 @media (max-width:900px){
-  .pin{grid-template-columns:1fr;gap:14px;align-content:start}
-  .scrolly .pin{padding-block:12px}
-  .chapters{min-height:5.2rem}
-  .ch{gap:4px}
-  .ch h2{font-size:1.55rem}
-  .chat-head small{display:none}
-  .chat-head b{font-size:.92rem}
-  .scrolly .ch-dots{display:none}
-  .phone{height:auto;flex:1}
-  .scrolly .phone{min-height:0}
-  .scrolly .pin{display:flex;flex-direction:column;align-items:stretch}
-  html:not(.scrolly) .phone{height:640px}
+  .film{padding:84px 0 76px;margin-top:40px}
+  .player{border-radius:16px;margin-top:32px}
+  .pbar{padding:10px;gap:8px}
+  .pbtn{height:36px;padding:0 12px;font-size:.8rem}.pbtn.icon{width:36px}
+  .bigplay{width:68px;height:68px;margin:-34px 0 0 -34px;font-size:1.4rem}
+  .chaps{display:flex;overflow-x:auto;gap:14px;scrollbar-width:none;margin-inline:-20px;padding-inline:20px}
+  .chaps::-webkit-scrollbar{display:none}
+  .chaps li{flex:0 0 132px}
 }
 
 /* ---------- dare wall ---------- */
@@ -403,85 +338,35 @@ html:not(.scrolly) .thread{justify-content:flex-start;overflow-y:auto}
   <p data-words>Cutting back alone runs on willpower. <em>Pact runs on friends.</em> They see your streak, cheer the good days, and pick your dare when you slip.</p>
 </div></section>
 
-<section class="story" id="how" aria-label="How a pact plays out, as a group chat"><div class="wrap pin">
-  <div class="chapters" aria-live="polite">
-    <div class="ch" data-ch="1"><span class="when">Sunday, 9:12 pm</span><h2>It starts in the group chat.</h2></div>
-    <div class="ch" data-ch="2"><span class="when">Every day</span><h2>One tap keeps the streak alive.</h2></div>
-    <div class="ch" data-ch="3"><span class="when">Tuesday, 9:40 pm</span><h2>Someone always <em>slips.</em></h2></div>
-    <div class="ch" data-ch="4"><span class="when">Sunday</span><h2>Last place takes <em>the dare.</em></h2></div>
-    <div class="ch-dots" aria-hidden="true"><i data-ch="1"></i><i data-ch="2"></i><i data-ch="3"></i><i data-ch="4"></i></div>
+<section class="film" id="how" aria-labelledby="film-title"><div class="wrap">
+  <div class="film-head rv">
+    <div>
+      <p class="eyebrow">Watch the demo · 0:53</p>
+      <h2 id="film-title">One week of Pact, start to dare.</h2>
+    </div>
+    <p>Pick a habit with your crew, check in every day, and watch what happens when someone slips.</p>
   </div>
 
-  <div class="phone">
-    <div class="chat-head">
-      <span class="back" aria-hidden="true">‹</span>
-      <span class="gav" aria-hidden="true"><i class="av a1">A</i><i class="av a2">R</i><i class="av a3">K</i><i class="av a4">Y</i></span>
-      <span><b>No Takeout Week 🥡</b><small>Alex, Ravi, Kim, You</small></span>
-      <span class="streak">Day 4 of 7</span>
+  <figure class="player" id="player">
+    <video id="film" muted playsinline loop preload="none" poster="assets/video/pact-demo-poster.jpg" aria-label="Pact product demo: creating a pact with friends, checking in, nudging a friend who slipped, voting on her dare, and the privacy view">
+      <source src="assets/video/pact-demo-720.mp4" type="video/mp4" media="(max-width: 900px)">
+      <source src="assets/video/pact-demo.mp4" type="video/mp4">
+    </video>
+    <button class="bigplay" id="bigplay" type="button" aria-label="Play the demo with sound">▶</button>
+    <div class="pbar">
+      <button class="pbtn snd" id="snd" type="button" aria-pressed="false"><span aria-hidden="true">🔊</span><span class="t">Tap for sound</span></button>
+      <button class="pbtn icon" id="pp" type="button" aria-label="Play">▶</button>
+      <button class="pbtn icon" id="fs" type="button" aria-label="Full screen">⤢</button>
     </div>
+  </figure>
 
-    <div class="thread" id="thread">
-      <!-- chapter 1 -->
-      <div class="m" data-ch="1"><div class="mi"><div class="stamp-t">SUN 9:12 PM</div></div></div>
-      <div class="m" data-ch="1" data-who="a1"><div class="mi"><div class="row"><i class="av a1">A</i><div class="bw"><span class="who">Alex</span><p class="b">I spent $96 on takeout this week 😭</p></div></div></div></div>
-      <div class="m" data-ch="1" data-who="a1"><div class="mi"><div class="row"><span class="sp"></span><div class="bw"><p class="b">who's doing a no-takeout week with me</p></div></div></div></div>
-      <div class="m" data-ch="1" data-who="a2"><div class="mi"><div class="row"><i class="av a2">R</i><div class="bw"><span class="who">Ravi</span><p class="b">in. my delivery history is embarrassing 💀</p></div></div></div></div>
-      <div class="m" data-ch="1" data-who="a3"><div class="mi"><div class="row"><i class="av a3">K</i><div class="bw"><span class="who">Kim</span><p class="b">fine. but whoever misses a day does a dare</p></div></div></div></div>
-      <div class="m" data-ch="1"><div class="mi"><div class="row me"><div class="bw"><p class="b">deal 🤝</p></div></div></div></div>
-      <div class="m" data-ch="1"><div class="mi"><div class="card-in">
-        <span class="k">New pact</span>
-        <span class="t">No Takeout Week</span>
-        <span>Mon Nov 10 – Sun Nov 16 · 7 days</span>
-        <span class="stakes">🎲 <span>Miss a day and the crew picks your dare.</span></span>
-        <span class="signed"><span class="stack"><i class="av a1">A</i><i class="av a2">R</i><i class="av a3">K</i><i class="av a4">Y</i></span>Signed by all 4</span>
-      </div></div></div>
-
-      <!-- chapter 2 -->
-      <div class="m" data-ch="2"><div class="mi"><div class="stamp-t">MON 7:48 PM</div></div></div>
-      <div class="m" data-ch="2"><div class="mi"><div class="sys"><span>✓ Alex kept it today</span></div></div></div>
-      <div class="m" data-ch="2" data-who="a2"><div class="mi has-rx"><div class="row"><i class="av a2">R</i><div class="bw"><span class="who">Ravi</span><p class="b">cooked for the first time since September 🍳<span class="rx">🔥 3</span></p></div></div></div></div>
-      <div class="m" data-ch="2"><div class="mi"><div class="row me"><div class="bw"><p class="b">who is this man</p></div></div></div></div>
-      <div class="m" data-ch="2"><div class="mi"><div class="sys"><span>✓ All 4 kept it · Day 1 done</span></div></div></div>
-
-      <!-- chapter 3 -->
-      <div class="m" data-ch="3"><div class="mi"><div class="stamp-t">TUE 9:40 PM</div></div></div>
-      <div class="m" data-ch="3"><div class="mi"><div class="sys bad"><span>⏰ Kim hasn't checked in · 2h left</span></div></div></div>
-      <div class="m" data-ch="3" data-who="a1"><div class="mi"><div class="row"><i class="av a1">A</i><div class="bw"><span class="who">Alex</span><p class="b">kiiiim 👀</p></div></div></div></div>
-      <div class="m" data-ch="3"><div class="mi"><div class="row me"><div class="bw"><p class="b">tell me that's not a delivery driver at your door</p></div></div></div></div>
-      <div class="m" data-ch="3" data-who="a3"><div class="mi"><div class="row"><i class="av a3">K</i><div class="bw"><span class="who">Kim</span><p class="b">…it was already on the way</p></div></div></div></div>
-      <div class="m" data-ch="3" data-who="a3"><div class="mi"><div class="row"><span class="sp"></span><div class="bw"><p class="b">it was pad thai. I regret nothing</p></div></div></div></div>
-      <div class="m" data-ch="3"><div class="mi"><div class="sys bad"><span>✕ Kim missed Tuesday</span></div></div></div>
-      <div class="m" data-ch="3" data-who="a2"><div class="mi has-rx"><div class="row"><i class="av a2">R</i><div class="bw"><span class="who">Ravi</span><p class="b">DARE. TIME.<span class="rx">😂 3</span></p></div></div></div></div>
-
-      <!-- chapter 4 -->
-      <div class="m" data-ch="4"><div class="mi"><div class="stamp-t">SUN 6:00 PM</div></div></div>
-      <div class="m" data-ch="4"><div class="mi"><div class="card-in">
-        <span class="k">Week 1 · Final</span>
-        <span class="t">Crew kept 27 of 28 days</span>
-        <div class="pg"><b>Alex</b><i class="cell k"></i><i class="cell k"></i><i class="cell k"></i><i class="cell k"></i><i class="cell k"></i><i class="cell k"></i><i class="cell k"></i><span>7/7</span></div>
-        <div class="pg"><b>Ravi</b><i class="cell k"></i><i class="cell k"></i><i class="cell k"></i><i class="cell k"></i><i class="cell k"></i><i class="cell k"></i><i class="cell k"></i><span>7/7</span></div>
-        <div class="pg"><b>You</b><i class="cell k"></i><i class="cell k"></i><i class="cell k"></i><i class="cell k"></i><i class="cell k"></i><i class="cell k"></i><i class="cell k"></i><span>7/7</span></div>
-        <div class="pg lose"><span>Kim</span><i class="cell k"></i><i class="cell x"></i><i class="cell k"></i><i class="cell k"></i><i class="cell k"></i><i class="cell k"></i><i class="cell k"></i><span>6/7</span></div>
-      </div></div></div>
-      <div class="m" data-ch="4"><div class="mi"><div class="card-in">
-        <span class="k">Poll · Kim's dare</span>
-        <span class="t">What does Kim have to do?</span>
-        <div class="poll">
-          <div class="opt win" style="--v:100%"><span>Wear a cape to class Monday 🦸</span><small>3</small></div>
-          <div class="opt" style="--v:0%"><span>Worst selfie as profile pic for 24h</span><small>0</small></div>
-          <div class="opt" style="--v:0%"><span>Talk like a pirate at dinner</span><small>0</small></div>
-        </div>
-      </div></div></div>
-      <div class="m" data-ch="4" data-who="a3"><div class="mi"><div class="row"><i class="av a3">K</i><div class="bw"><span class="who">Kim</span><p class="b">a CAPE??</p></div></div></div></div>
-      <div class="m" data-ch="4" data-who="a3"><div class="mi has-rx"><div class="row"><span class="sp"></span><div class="bw"><p class="b">fine. next week I'm winning<span class="rx">🦸 3</span></p></div></div></div></div>
-      <div class="m" data-ch="4"><div class="mi"><div class="row me"><div class="bw"><p class="b">same time next week? 😌</p><span class="read">Read by 3</span></div></div></div></div>
-      <div class="m" data-ch="4"><div class="mi"><div class="sys"><span>📜 Alex started a new pact: No Impulse Buys</span></div></div></div>
-
-      <div class="typing" id="typing" aria-hidden="true"><i class="av a1">A</i><span class="dots"><i></i><i></i><i></i></span></div>
-    </div>
-
-    <div class="composer" aria-hidden="true"><span class="in">Message</span><span class="ci">✓ Check in</span></div>
-  </div>
+  <ol class="chaps" id="chaps" aria-label="Jump to a part of the demo">
+    <li><button type="button" data-t="4.3" data-end="13.3"><span class="ln"><i></i></span><small>0:04</small><b>Start a pact</b></button></li>
+    <li><button type="button" data-t="13.3" data-end="21.9"><span class="ln"><i></i></span><small>0:13</small><b>Check in daily</b></button></li>
+    <li><button type="button" data-t="21.9" data-end="29.9"><span class="ln"><i></i></span><small>0:22</small><b>Nudge a friend</b></button></li>
+    <li><button type="button" data-t="29.9" data-end="39.8"><span class="ln"><i></i></span><small>0:30</small><b>Vote on the dare</b></button></li>
+    <li><button type="button" data-t="39.8" data-end="53.4"><span class="ln"><i></i></span><small>0:40</small><b>Private by design</b></button></li>
+  </ol>
 </div></section>
 
 <section class="dares" aria-label="Example dares"><div class="wrap head">
@@ -582,7 +467,7 @@ html:not(.scrolly) .thread{justify-content:flex-start;overflow-y:auto}
 </div></footer>
 
 <script src="assets/site.js?v=4"></script>
-<script src="assets/home.js?v=5"></script>
+<script src="assets/home.js?v=6"></script>
 <script src="assets/config.js?v=4"></script>
 <script src="assets/signup.js?v=4"></script>
 </body>
